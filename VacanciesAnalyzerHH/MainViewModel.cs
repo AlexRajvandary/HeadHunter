@@ -18,9 +18,8 @@ namespace VacanciesAnalyzerHH
         private Vacancy selectedVacancy;
         private int totalNumberOfPages;
         private int currentNumberOfPage;
-        private ObservableCollection<string> skills;
-        private List<string> requirements;
-        private List<string> responsibilities;
+        private IEnumerable<KeyValuePair<string, List<string>>> skills;
+        private SalaryData salaryData;
 
         public MainViewModel()
         {
@@ -52,7 +51,7 @@ namespace VacanciesAnalyzerHH
             }
         }
 
-        public ObservableCollection<string> Skills
+        public IEnumerable<KeyValuePair<string, List<string>>> Skills
         {
             get => skills;
             set
@@ -102,6 +101,16 @@ namespace VacanciesAnalyzerHH
             }
         }
 
+        public SalaryData SalaryData
+        {
+            get => salaryData;
+            set
+            {
+                salaryData = value;
+                OnPropertyChanged();
+            }
+        }
+
         public async void Search()
         {
             if (string.IsNullOrWhiteSpace(TextSearch))
@@ -120,6 +129,7 @@ namespace VacanciesAnalyzerHH
             TotalNumberOfPages = deserializedData.pages.Value;
 
             GetSkills();
+            SalaryData = new SalaryData(deserializedData.items);
         }
 
         public void GetSkills()
@@ -166,8 +176,8 @@ namespace VacanciesAnalyzerHH
                         continue;
                     }
                 }
-
-                Skills = new ObservableCollection<string>(t);
+                var source = dict.OrderByDescending(d => d.Value.Count);
+                Skills = source;
             }
         }
 

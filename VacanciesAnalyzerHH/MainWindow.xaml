@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:local="clr-namespace:VacanciesAnalyzerHH" d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800" Name="mainWindow">
@@ -59,7 +60,16 @@
                     </DataGrid>
                 </Grid>
             </TabItem>
-            <TabItem Header="Анализ зарплат"/>
+            <TabItem Header="Анализ зарплат">
+                <lvc:CartesianChart Series="{Binding SalaryData.SeriesCollection}" LegendLocation="Left">
+                    <lvc:CartesianChart.AxisX>
+                        <lvc:Axis Title="Зарплаты"/>
+                    </lvc:CartesianChart.AxisX>
+                    <lvc:CartesianChart.AxisY>
+                        <lvc:Axis Title="Количество вакансий"/>
+                    </lvc:CartesianChart.AxisY>
+                </lvc:CartesianChart>
+            </TabItem>
             <TabItem Header="Подробнее о вакансии">
                 <TabItem.Style>
                     <Style TargetType="TabItem">
@@ -92,7 +102,18 @@
                 </StackPanel>
             </TabItem>
             <TabItem Header="Анализ навыков и требований">
-                <ListView ItemsSource="{Binding Skills}"/>
+                <ListView ItemsSource="{Binding Skills}">
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Key}"/>
+                                <Expander Header="{Binding Value.Count}">
+                                    <ListView ItemsSource="{Binding Value}" ScrollViewer.CanContentScroll="True"/>
+                                </Expander>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
             </TabItem>
         </TabControl>
     </Grid>
