@@ -42,6 +42,15 @@ namespace VacanciesAnalyzerHH
             SeriesCollection = new SeriesCollection();
             var quantaties = new int[6];
             var section = (double)Max.to / 6;
+            Labels = new string[]
+            {
+                $"0 - {section:0}",
+                $"{section:0} - {2 * section:0}",
+                $"{2 * section:0} - {3 * section:0}",
+                $"{3 * section :0} - {4 * section :0}",
+                $"{4 * section :0} - {5 * section :0}",
+                $"{5 * section :0} - {6 * section :0}",
+            };
 
             foreach (var vac in Data)
             {
@@ -87,6 +96,7 @@ namespace VacanciesAnalyzerHH
 
         public SeriesCollection SeriesCollection { get; set; }
 
+        public string[] Labels { get; set; }
 
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {

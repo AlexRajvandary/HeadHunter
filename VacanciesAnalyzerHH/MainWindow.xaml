@@ -63,7 +63,7 @@
             <TabItem Header="Анализ зарплат">
                 <lvc:CartesianChart Series="{Binding SalaryData.SeriesCollection}" LegendLocation="Left">
                     <lvc:CartesianChart.AxisX>
-                        <lvc:Axis Title="Зарплаты"/>
+                        <lvc:Axis Title="Зарплаты" Labels="{Binding SalaryData.Labels}"/>
                     </lvc:CartesianChart.AxisX>
                     <lvc:CartesianChart.AxisY>
                         <lvc:Axis Title="Количество вакансий"/>
