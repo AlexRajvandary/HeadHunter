@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "VacanciesAnalyzerHH", "VacanciesAnalyzerHH\VacanciesAnalyzerHH.csproj", "{E36BC02E-862C-4C5C-B368-950D307E48CF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E36BC02E-862C-4C5C-B368-950D307E48CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E36BC02E-862C-4C5C-B368-950D307E48CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E36BC02E-862C-4C5C-B368-950D307E48CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E36BC02E-862C-4C5C-B368-950D307E48CF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E706BD4F-4412-4901-812C-B48DC1E5EEA5}
+	EndGlobalSection
+EndGlobal
