@@ -181,6 +181,8 @@ namespace VacanciesAnalyzerHH
 
             foreach (var skill in allSkillsRaw)
             {
+                if(skill == null) continue;
+
                 var s = skill.ToLower().Split(new string[] { ";", "уверенное", "знание", "опыт", "уметь", "знать", ",", ". " }, options: System.StringSplitOptions.TrimEntries);
                 skills.AddRange(s);
             }
