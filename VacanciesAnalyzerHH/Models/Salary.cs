@@ -6,6 +6,9 @@ namespace VacanciesAnalyzerHH.Models
 {
     public class Salary : INotifyPropertyChanged
     {
+        private int? from;
+        private int? to;
+        private string currency;
         private double? visibleFrom;
         private double? visibleTo;
         private string visibleCurrency;
@@ -17,20 +20,40 @@ namespace VacanciesAnalyzerHH.Models
             Currency = currency;
             Gross = gross;
 
-            VisibleCurrency = currency;
-            VisibleFrom = from;
-            VisibleTo = to;
-
             CompleteData();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public int? From { get; private set; }
+        public int? From
+        {
+            get => from;
+            private set
+            {
+                from = value;
+                visibleFrom = from;
+            }
+        }
 
-        public int? To { get; private set; }
+        public int? To
+        {
+            get => to;
+            private set
+            {
+                to = value;
+                visibleTo = to;
+            }
+        }
 
-        public string Currency { get; set; }
+        public string Currency
+        {
+            get => currency;
+            private set
+            {
+                currency = value;
+                visibleCurrency = currency;
+            }
+        }
 
         public bool? Gross { get; set; }
 
@@ -44,7 +67,7 @@ namespace VacanciesAnalyzerHH.Models
             }
         }
 
-        public double? VisibleTo 
+        public double? VisibleTo
         {
             get => visibleTo;
             private set

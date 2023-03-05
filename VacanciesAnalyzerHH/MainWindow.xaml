@@ -53,7 +53,10 @@
                             <DataGridTextColumn Header="Компания" Binding="{Binding employer.name}"/>
                             <DataGridTextColumn Header="Зарплата от" Binding="{Binding salary.From}"/>
                             <DataGridTextColumn Header="Зарплата до" Binding="{Binding salary.To}"/>
-                            <DataGridTextColumn Header="Зарплата до" Binding="{Binding salary.Currency}"/>
+                            <DataGridTextColumn Header="Валюта" Binding="{Binding salary.Currency}"/>
+                            <DataGridTextColumn Header="Зарплата от (переведёная)" Binding="{Binding salary.VisibleFrom}"/>
+                            <DataGridTextColumn Header="Зарплата до (переведённая)" Binding="{Binding salary.VisibleTo}"/>
+                            <DataGridTextColumn Header="Валюта (переведённая)" Binding="{Binding salary.VisibleCurrency}"/>
                             <DataGridTextColumn Header="Адрес" Binding="{Binding address}"/>
                             <DataGridTextColumn Header="Опубликована" Binding="{Binding published_at}"/>
                             <DataGridTextColumn Header="График работы" Binding="{Binding schedule.name}"/>
@@ -89,8 +92,9 @@
                     <TextBlock Text="{Binding SelectedVacancy.employer.name}" Margin="2,0,5,0" Padding="10,2"/>
 
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding SelectedVacancy.salary.from}" Margin="2,0,5,0" Padding="10,2"/>
-                        <TextBlock Text="{Binding SelectedVacancy.salary.to}" Margin="2,0,5,0" Padding="10,2"/>
+                        <TextBlock Text="{Binding SelectedVacancy.salary.From}" Margin="2,0,5,0" Padding="10,2"/>
+                        <TextBlock Text="{Binding SelectedVacancy.salary.To}" Margin="2,0,5,0" Padding="10,2"/>
+                        <TextBlock Text="{Binding SelectedVacancy.salary.Currency}" Margin="2,0,5,0" Padding="10,2"/>
                     </StackPanel>
 
                     <TextBlock Text="Требования:" Margin="2,0,5,0" Padding="10,2"/>

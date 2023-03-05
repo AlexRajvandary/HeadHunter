@@ -4,6 +4,7 @@
     {
         USD,
         RUR,
-        KZT
+        KZT,
+        Unknown
     }
 }

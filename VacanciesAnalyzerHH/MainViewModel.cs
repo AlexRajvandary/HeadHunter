@@ -29,8 +29,6 @@ namespace VacanciesAnalyzerHH
             currencyConverter.SetValue(70d, Currency.USD, Currency.RUR);
             currencyConverter.SetValue(431d, Currency.USD, Currency.KZT);
             currencyConverter.SetValue(0.17d, Currency.KZT, Currency.RUR);
-
-            var t = currencyConverter.Convert(1, Currency.USD, Currency.RUR);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -136,7 +134,7 @@ namespace VacanciesAnalyzerHH
             TotalNumberOfPages = deserializedData.pages.Value;
 
             GetSkills();
-            SalaryData = new SalaryData(deserializedData.items);
+            SalaryData = new SalaryData(deserializedData.items, currencyConverter);
         }
 
         public void GetSkills()
