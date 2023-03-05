@@ -64,6 +64,11 @@ namespace VacanciesAnalyzerHH
 
         public ObservableCollection<string> Labels { get; set; }
 
+        public void Clean()
+        {
+            SeriesCollection[0].Values.Clear();
+        }
+
         public void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

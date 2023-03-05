@@ -138,6 +138,7 @@ namespace VacanciesAnalyzerHH
                 return;
             }
 
+            SalaryVisualizer.Clean();
             Vacancies.Clear();
             NumOfLoadedVacancies = 0;
             
