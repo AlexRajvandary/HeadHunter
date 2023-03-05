@@ -15,7 +15,8 @@ namespace VacanciesAnalyzerHH
         private ApiClient apiClient;
         private CurrencyConverter currencyConverter = new CurrencyConverter();
         private string textSearch;
-        private ObservableCollection<Vacancy> vacancies;
+        private ObservableCollection<ObservableCollection<Vacancy>> vacancies;
+        private ObservableCollection<Vacancy> currentPageOfVacancies;
         private int totalNumberOfVacancies;
         private Vacancy selectedVacancy;
         private int totalNumberOfPages;
@@ -23,6 +24,7 @@ namespace VacanciesAnalyzerHH
         private IEnumerable<KeyValuePair<string, List<string>>> skills;
         private SalaryData salaryData;
         private Currency selectedCurrency;
+        private int numOfLoadedVacancies;
 
         public MainViewModel()
         {
@@ -33,6 +35,16 @@ namespace VacanciesAnalyzerHH
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        public int NumOfLoadedVacancies
+        {
+            get => numOfLoadedVacancies;
+            set
+            {
+                numOfLoadedVacancies = value;
+                OnPropertyChanged();
+            }
+        }
 
         public Currency SelectedCurrency
         {
@@ -57,12 +69,22 @@ namespace VacanciesAnalyzerHH
             }
         }
 
-        public ObservableCollection<Vacancy> Vacancies
+        public ObservableCollection<ObservableCollection<Vacancy>> PagesOfVacancies
         {
             get => vacancies;
             set
             {
                 vacancies = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public ObservableCollection<Vacancy> CurrentPageOfVacancies
+        {
+            get => currentPageOfVacancies;
+            set
+            {
+                currentPageOfVacancies = value;
                 OnPropertyChanged();
             }
         }
@@ -129,13 +151,15 @@ namespace VacanciesAnalyzerHH
 
         public void ConvertSalaries()
         {
-            if(SelectedCurrency != null)
+            if (SelectedCurrency != null)
             {
-                foreach(var vacancy in Vacancies)
+                foreach (var page in PagesOfVacancies)
                 {
-                    if (vacancy.salary == null) continue;
-
-                    vacancy.salary.ConvertTo(SelectedCurrency, currencyConverter);
+                    foreach (var vacancy in page)
+                    {
+                        if (vacancy.salary == null) continue;
+                        vacancy.salary.ConvertTo(SelectedCurrency, currencyConverter);
+                    }
                 }
             }
         }
@@ -147,28 +171,58 @@ namespace VacanciesAnalyzerHH
                 return;
             }
 
+            NumOfLoadedVacancies = 0;
+
             var param = new Dictionary<string, string>();
             param.TryAdd($"text", TextSearch);
-            param.TryAdd($"page", CurrentNumberOfPage.ToString());
+            param.TryAdd($"page", 0.ToString());
             param.TryAdd($"per_page", 50.ToString());
             var data = await (await apiClient.GetVacancies(param)).Content.ReadAsStringAsync();
             var deserializedData = JsonConvert.DeserializeObject<HHResponce>(data);
-            Vacancies = new ObservableCollection<Vacancy>(deserializedData.items);
+            PagesOfVacancies = new ObservableCollection<ObservableCollection<Vacancy>>();
             TotalNumberOfVacancies = deserializedData.found.Value;
             TotalNumberOfPages = deserializedData.pages.Value;
 
+            var allVacancies = new List<Vacancy>();
+            allVacancies.AddRange(deserializedData.items);
+
+            PagesOfVacancies.Add(new ObservableCollection<Vacancy>(deserializedData.items));
+            CurrentPageOfVacancies = PagesOfVacancies[0];
+
+            for (int i = 1; i < TotalNumberOfPages; i++)
+            {
+                var p = new Dictionary<string, string>();
+                p.TryAdd($"text", TextSearch);
+                p.TryAdd($"page", i.ToString());
+                p.TryAdd($"per_page", 50.ToString());
+                var d = await (await apiClient.GetVacancies(param)).Content.ReadAsStringAsync();
+                var t = JsonConvert.DeserializeObject<HHResponce>(data);
+
+                PagesOfVacancies.Add(new ObservableCollection<Vacancy>(t.items));
+                NumOfLoadedVacancies += t.items.Count;
+                allVacancies.AddRange(t.items);
+            }
+
             GetSkills();
-            SalaryData = new SalaryData(deserializedData.items, currencyConverter);
+            SalaryData = new SalaryData(allVacancies, currencyConverter);
         }
 
         public void GetSkills()
         {
-            if (Vacancies.Count > 0)
+            if (PagesOfVacancies.Count > 0)
             {
-                var skills = Vacancies.Select(v => v.snippet.requirement);
+                var pagesOfSkills = PagesOfVacancies.Select(v => v.Select(v => v.snippet.requirement));
+
+                var allSkills = new List<string>();
+
+                foreach(var pageOfSkill in pagesOfSkills)
+                {
+                    allSkills.AddRange(pageOfSkill);
+                }
+
                 var t = new List<string>();
                 var dict = new Dictionary<string, List<string>>();
-                foreach (var skill in skills)
+                foreach (var skill in allSkills)
                 {
                     if (skill == null)
                     {
@@ -207,6 +261,14 @@ namespace VacanciesAnalyzerHH
                 }
                 var source = dict.OrderByDescending(d => d.Value.Count);
                 Skills = source;
+            }
+        }
+
+        public void GoToPage()
+        {
+            if(CurrentNumberOfPage > 0 && CurrentNumberOfPage <= TotalNumberOfPages)
+            {
+                CurrentPageOfVacancies = PagesOfVacancies[CurrentNumberOfPage - 1];
             }
         }
 

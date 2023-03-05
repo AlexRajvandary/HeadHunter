@@ -32,7 +32,9 @@
             </DockPanel>
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="Найдено вакансий:" Margin="2,0,5,0" Padding="10,2" Height="25" VerticalAlignment="Center"/>
-                <TextBlock Width="600" Text="{Binding TotalNumberOfVacancies}" Height="25" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding TotalNumberOfVacancies}" Height="25" VerticalAlignment="Center"/>
+                <TextBlock Text="Загружено вакансий:" Margin="2,0,5,0" Padding="10,2" Height="25" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding NumOfLoadedVacancies}" Height="25" VerticalAlignment="Center"/>
             </StackPanel>
             <Expander Header="Конвертировать валюту">
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
@@ -67,10 +69,11 @@
                             <TextBox Text="{Binding CurrentNumberOfPage}" Margin="2,0,5,0" Padding="10,2" Height="21" VerticalAlignment="Center"/>
                             <TextBlock Text=" из " Height="25" VerticalAlignment="Center" Padding="2" />
                             <TextBlock Text="{Binding TotalNumberOfPages}" Height="25" VerticalAlignment="Center"/>
+                            <Button Content="Перейти" Click="Button_Click_1"/>
                         </StackPanel>
                     </StackPanel>
 
-                    <DataGrid Grid.Row="1" ItemsSource="{Binding Vacancies}" SelectedItem="{Binding SelectedVacancy}" Height="600" Width="auto" AutoGenerateColumns="False">
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding CurrentPageOfVacancies}" SelectedItem="{Binding SelectedVacancy}" Height="600" Width="auto" AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Название" Binding="{Binding name}"/>
                             <DataGridTextColumn Header="Компания" Binding="{Binding employer.name}"/>
