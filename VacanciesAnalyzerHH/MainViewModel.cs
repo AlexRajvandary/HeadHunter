@@ -137,7 +137,7 @@ namespace VacanciesAnalyzerHH
                 return;
             }
 
-            var itemsPerPage = 50;
+            var itemsPerPage = 100;
             var hhResponse = await apiClient.GetVacancies(TextSearch, 0, itemsPerPage);
             var totalNumberOfPages = hhResponse.pages ?? 0;
 
