@@ -19,23 +19,39 @@
         </ObjectDataProvider>
     </Window.Resources>
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Orientation="Vertical" Grid.Row="0">
+            <DockPanel Grid.Row="0" Width="auto">
+                <TextBlock Text="Поиск" Margin="2,0,5,0" Padding="10,2" VerticalAlignment="Center"/>
+                <TextBox MinWidth="640" Width="auto" Text="{Binding TextSearch}" VerticalAlignment="Center" Height="25"/>
+                <Button Content="Найти" Padding="10,2" Click="Button_Click" DockPanel.Dock="Right" Width="80" Height="25" Margin="5,0,0,0"/>
+            </DockPanel>
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="Найдено вакансий:" Margin="2,0,5,0" Padding="10,2" Height="25" VerticalAlignment="Center"/>
+                <TextBlock Width="600" Text="{Binding TotalNumberOfVacancies}" Height="25" VerticalAlignment="Center"/>
+            </StackPanel>
+            <Expander Header="Конвертировать валюту">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                    <TextBlock Text="Конвертировать в" Padding="10,2" Height="25" VerticalAlignment="Center"/>
+                    <ComboBox ItemsSource="{Binding Source={StaticResource EnumDataSource}}" SelectedItem="{Binding SelectedCurrency}" Margin="2,0,5,0" Padding="10,2" Height="21" VerticalAlignment="Center"/>
+                    <Button Click="ConvertSalaries" Content="Конвертировать" Padding="5,2" Margin="2"/>
+                </StackPanel>
+            </Expander>
+        </StackPanel>
         
-        <TabControl>
-            <TabItem Header="Поиск вакансий">
+        <TabControl Grid.Row="1">
+            <TabItem Header="Все вакансии">
                 <Grid>
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="27"/>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
-              
-                    <DockPanel Grid.Row="0" Width="auto">
-                        <TextBlock Text="Поиск" Margin="2,0,5,0" Padding="10,2" VerticalAlignment="Center"/>
-                        <TextBox MinWidth="640" Width="auto" Text="{Binding TextSearch}" VerticalAlignment="Center" Height="25"/>
-                        <Button Content="Найти" Padding="10,2" Click="Button_Click" DockPanel.Dock="Right" Width="80" Height="25" Margin="5,0,0,0"/>
-                    </DockPanel>
 
-                    <StackPanel Grid.Row="1" Orientation="Vertical">
+                    <StackPanel Grid.Row="0" Orientation="Vertical">
                         <StackPanel.Style>
                             <Style TargetType="StackPanel">
                                 <Style.Triggers>
@@ -46,28 +62,15 @@
                             </Style>
                         </StackPanel.Style>
 
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="Найдено вакансий:" Margin="2,0,5,0" Padding="10,2" Height="25" VerticalAlignment="Center"/>
-                            <TextBlock Width="600" Text="{Binding TotalNumberOfVacancies}" Height="25" VerticalAlignment="Center"/>
-                        </StackPanel>
-
                         <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
                             <TextBlock Text="Страница" Padding="10,2" Height="25" VerticalAlignment="Center"/>
                             <TextBox Text="{Binding CurrentNumberOfPage}" Margin="2,0,5,0" Padding="10,2" Height="21" VerticalAlignment="Center"/>
                             <TextBlock Text=" из " Height="25" VerticalAlignment="Center" Padding="2" />
                             <TextBlock Text="{Binding TotalNumberOfPages}" Height="25" VerticalAlignment="Center"/>
                         </StackPanel>
-                        <Expander Header="Конвертировать валюту">
-                            <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
-                                <TextBlock Text="Конвертировать в" Padding="10,2" Height="25" VerticalAlignment="Center"/>
-                                <ComboBox ItemsSource="{Binding Source={StaticResource EnumDataSource}}" SelectedItem="{Binding SelectedCurrency}" Margin="2,0,5,0" Padding="10,2" Height="21" VerticalAlignment="Center"/>
-                                <Button Click="ConvertSalaries" Content="Конвертировать" Padding="5,2" Margin="2"/>
-                            </StackPanel>
-                        </Expander>
-                      
                     </StackPanel>
 
-                    <DataGrid Grid.Row="2" ItemsSource="{Binding Vacancies}" SelectedItem="{Binding SelectedVacancy}" Height="600" Width="auto" AutoGenerateColumns="False">
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding Vacancies}" SelectedItem="{Binding SelectedVacancy}" Height="600" Width="auto" AutoGenerateColumns="False">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Название" Binding="{Binding name}"/>
                             <DataGridTextColumn Header="Компания" Binding="{Binding employer.name}"/>
