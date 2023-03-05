@@ -28,5 +28,10 @@ namespace VacanciesAnalyzerHH
                 MessageBox.Show(ex.Message);
             }
         }
+
+        private void ConvertSalaries(object sender, RoutedEventArgs e)
+        {
+            MainViewModel?.ConvertSalaries();
+        }
     }
 }

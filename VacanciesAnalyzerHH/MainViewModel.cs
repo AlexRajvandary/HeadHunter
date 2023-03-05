@@ -22,6 +22,7 @@ namespace VacanciesAnalyzerHH
         private int currentNumberOfPage;
         private IEnumerable<KeyValuePair<string, List<string>>> skills;
         private SalaryData salaryData;
+        private Currency selectedCurrency;
 
         public MainViewModel()
         {
@@ -32,6 +33,16 @@ namespace VacanciesAnalyzerHH
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        public Currency SelectedCurrency
+        {
+            get => selectedCurrency;
+            set
+            {
+                selectedCurrency = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string TextSearch
         {
@@ -113,6 +124,19 @@ namespace VacanciesAnalyzerHH
             {
                 salaryData = value;
                 OnPropertyChanged();
+            }
+        }
+
+        public void ConvertSalaries()
+        {
+            if(SelectedCurrency != null)
+            {
+                foreach(var vacancy in Vacancies)
+                {
+                    if (vacancy.salary == null) continue;
+
+                    vacancy.salary.ConvertTo(SelectedCurrency, currencyConverter);
+                }
             }
         }
 

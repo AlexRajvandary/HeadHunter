@@ -28,7 +28,7 @@ namespace VacanciesAnalyzerHH.Models
         public int? From
         {
             get => from;
-            private set
+            set
             {
                 from = value;
                 visibleFrom = from;
@@ -38,7 +38,7 @@ namespace VacanciesAnalyzerHH.Models
         public int? To
         {
             get => to;
-            private set
+            set
             {
                 to = value;
                 visibleTo = to;
@@ -48,7 +48,7 @@ namespace VacanciesAnalyzerHH.Models
         public string Currency
         {
             get => currency;
-            private set
+            set
             {
                 currency = value;
                 visibleCurrency = currency;
@@ -60,7 +60,7 @@ namespace VacanciesAnalyzerHH.Models
         public double? VisibleFrom
         {
             get => visibleFrom;
-            private set
+            set
             {
                 visibleFrom = value;
                 OnPropertyChanged();
@@ -70,7 +70,7 @@ namespace VacanciesAnalyzerHH.Models
         public double? VisibleTo
         {
             get => visibleTo;
-            private set
+            set
             {
                 visibleTo = value;
                 OnPropertyChanged();
@@ -92,7 +92,7 @@ namespace VacanciesAnalyzerHH.Models
             if (From == null) return;
 
             VisibleFrom = currencyConverter.Convert((double)From, Support_services.CurrencyExtension.StringToCurrency(Currency), to);
-            VisibleTo = currencyConverter.Convert((double)From, Support_services.CurrencyExtension.StringToCurrency(Currency), to);
+            VisibleTo = currencyConverter.Convert((double)To, Support_services.CurrencyExtension.StringToCurrency(Currency), to);
             VisibleCurrency = to.CurrencyToString();
         }
 
