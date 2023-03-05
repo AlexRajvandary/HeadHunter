@@ -17,13 +17,13 @@ namespace VacanciesAnalyzerHH
 
         public MainViewModel MainViewModel { get; set; }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                MainViewModel?.Search();
+                await MainViewModel?.Search();
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 MessageBox.Show(ex.Message);
             }
@@ -32,11 +32,6 @@ namespace VacanciesAnalyzerHH
         private void ConvertSalaries(object sender, RoutedEventArgs e)
         {
             MainViewModel?.ConvertSalaries();
-        }
-
-        private void Button_Click_1(object sender, RoutedEventArgs e)
-        {
-            MainViewModel?.GoToPage();
         }
     }
 }

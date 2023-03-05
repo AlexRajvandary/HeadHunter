@@ -1,10 +1,10 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
 using VacanciesAnalyzerHH.Models;
 using VacanciesAnalyzerHH.Support_services;
 
@@ -15,12 +15,9 @@ namespace VacanciesAnalyzerHH
         private ApiClient apiClient;
         private CurrencyConverter currencyConverter = new CurrencyConverter();
         private string textSearch;
-        private ObservableCollection<ObservableCollection<Vacancy>> vacancies;
-        private ObservableCollection<Vacancy> currentPageOfVacancies;
+        private ObservableCollection<Vacancy> vacancies;
         private int totalNumberOfVacancies;
         private Vacancy selectedVacancy;
-        private int totalNumberOfPages;
-        private int currentNumberOfPage;
         private IEnumerable<KeyValuePair<string, List<string>>> skills;
         private SalaryData salaryData;
         private Currency selectedCurrency;
@@ -32,6 +29,8 @@ namespace VacanciesAnalyzerHH
             currencyConverter.SetValue(70d, Currency.USD, Currency.RUR);
             currencyConverter.SetValue(431d, Currency.USD, Currency.KZT);
             currencyConverter.SetValue(0.17d, Currency.KZT, Currency.RUR);
+
+            Vacancies = new ObservableCollection<Vacancy>();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -69,22 +68,12 @@ namespace VacanciesAnalyzerHH
             }
         }
 
-        public ObservableCollection<ObservableCollection<Vacancy>> PagesOfVacancies
+        public ObservableCollection<Vacancy> Vacancies
         {
             get => vacancies;
             set
             {
                 vacancies = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public ObservableCollection<Vacancy> CurrentPageOfVacancies
-        {
-            get => currentPageOfVacancies;
-            set
-            {
-                currentPageOfVacancies = value;
                 OnPropertyChanged();
             }
         }
@@ -119,26 +108,6 @@ namespace VacanciesAnalyzerHH
             }
         }
 
-        public int TotalNumberOfPages
-        {
-            get => totalNumberOfPages;
-            set
-            {
-                totalNumberOfPages = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public int CurrentNumberOfPage
-        {
-            get => currentNumberOfPage;
-            set
-            {
-                currentNumberOfPage = value;
-                OnPropertyChanged();
-            }
-        }
-
         public SalaryData SalaryData
         {
             get => salaryData;
@@ -151,132 +120,106 @@ namespace VacanciesAnalyzerHH
 
         public void ConvertSalaries()
         {
-            if (SelectedCurrency != null)
+            if (SelectedCurrency != Currency.Unknown)
             {
-                foreach (var page in PagesOfVacancies)
+                foreach (var vacancy in Vacancies)
                 {
-                    foreach (var vacancy in page)
-                    {
-                        if (vacancy.salary == null) continue;
-                        vacancy.salary.ConvertTo(SelectedCurrency, currencyConverter);
-                    }
+                    if (vacancy.salary == null) continue;
+                    vacancy.salary.ConvertTo(SelectedCurrency, currencyConverter);
                 }
             }
         }
 
-        public async void Search()
+        public async Task Search()
         {
             if (string.IsNullOrWhiteSpace(TextSearch))
             {
                 return;
             }
 
-            NumOfLoadedVacancies = 0;
+            var itemsPerPage = 50;
+            var hhResponse = await apiClient.GetVacancies(TextSearch, 0, itemsPerPage);
+            var totalNumberOfPages = hhResponse.pages ?? 0;
 
-            var param = new Dictionary<string, string>();
-            param.TryAdd($"text", TextSearch);
-            param.TryAdd($"page", 0.ToString());
-            param.TryAdd($"per_page", 50.ToString());
-            var data = await (await apiClient.GetVacancies(param)).Content.ReadAsStringAsync();
-            var deserializedData = JsonConvert.DeserializeObject<HHResponce>(data);
-            PagesOfVacancies = new ObservableCollection<ObservableCollection<Vacancy>>();
-            TotalNumberOfVacancies = deserializedData.found.Value;
-            TotalNumberOfPages = deserializedData.pages.Value;
-
-            var allVacancies = new List<Vacancy>();
-            allVacancies.AddRange(deserializedData.items);
-
-            PagesOfVacancies.Add(new ObservableCollection<Vacancy>(deserializedData.items));
-            CurrentPageOfVacancies = PagesOfVacancies[0];
-            NumOfLoadedVacancies += CurrentPageOfVacancies.Count;
-
-            for (int i = 1; i < TotalNumberOfPages; i++)
+            if (hhResponse == null)
             {
-                var p = new Dictionary<string, string>();
-                p.TryAdd($"text", TextSearch);
-                p.TryAdd($"page", i.ToString());
-                p.TryAdd($"per_page", 50.ToString());
-                var d = await (await apiClient.GetVacancies(param)).Content.ReadAsStringAsync();
-                var t = JsonConvert.DeserializeObject<HHResponce>(d);
+                return;
+            }
 
-                PagesOfVacancies.Add(new ObservableCollection<Vacancy>(t.items));
-                NumOfLoadedVacancies += t.items.Count;
-                allVacancies.AddRange(t.items);
+            Vacancies.Clear();
+            NumOfLoadedVacancies = 0;
+            TotalNumberOfVacancies = hhResponse.found ?? 0;
+
+            foreach (var vacancy in hhResponse.items)
+            {
+                Vacancies.Add(vacancy);
+            }
+
+            NumOfLoadedVacancies += hhResponse.items.Count;
+
+            for (int i = 1; i < totalNumberOfPages; i++)
+            {
+                hhResponse = await apiClient.GetVacancies(TextSearch, i, itemsPerPage);
+
+                foreach (var vacancy in hhResponse.items)
+                {
+                    Vacancies.Add(vacancy);
+                    NumOfLoadedVacancies++;
+                }
             }
 
             GetSkills();
-            SalaryData = new SalaryData(allVacancies, currencyConverter);
+            SalaryData = new SalaryData(Vacancies.ToList(), currencyConverter);
         }
 
-        public void GetSkills()
+        private void GetSkills()
         {
-            if (PagesOfVacancies.Count > 0)
+            var allSkillsRaw = Vacancies.Where(vacancy => vacancy.snippet != null).Select(vacancy => vacancy.snippet.requirement);
+
+            var skills = new List<string>();
+            var dictionaryOfSkills = new Dictionary<string, List<string>>();
+
+            foreach (var skill in allSkillsRaw)
             {
-                var pagesOfSkills = PagesOfVacancies.Select(v => v.Select(v => v.snippet.requirement));
+                var s = skill.ToLower().Split(new string[] { ";", "уверенное", "знание", "опыт", "уметь", "знать", ",", ". " }, options: System.StringSplitOptions.TrimEntries);
+                skills.AddRange(s);
+            }
 
-                var allSkills = new List<string>();
-
-                foreach(var pageOfSkill in pagesOfSkills)
+            skills.RemoveAll(word => string.IsNullOrWhiteSpace(word));
+            
+            for (int i = 0; i < skills.Count; i++)
+            {
+                if (dictionaryOfSkills.TryAdd(skills[i], new List<string> { skills[i] }))
                 {
-                    allSkills.AddRange(pageOfSkill);
-                }
-
-                var t = new List<string>();
-                var dict = new Dictionary<string, List<string>>();
-                foreach (var skill in allSkills)
-                {
-                    if (skill == null)
+                    for (int j = i + 1; j < skills.Count; j++)
                     {
-                        continue;
-                    }
-
-                    var s = skill.ToLower().Split(new string[] { ";", "уверенное", "знание", "опыт", "уметь", "знать", ",", ". " }, options: System.StringSplitOptions.TrimEntries);
-                    t.AddRange(s);
-                }
-
-                t.RemoveAll(w => string.IsNullOrWhiteSpace(w));
-                var num = t.Count;
-                for (int i = 0; i < t.Count; i++)
-                {
-                    if (dict.TryAdd(t[i], new List<string> { t[i] }))
-                    {
-                        for (int j = i + 1; j < t.Count; j++)
+                        if (LevenshteinDistance(skills[i], skills[j]) < 5 || (skills[i].Length >= skills[j].Length ? skills[i].Contains(skills[j]) : skills[j].Contains(skills[i])))
                         {
-                            if (LevenshteinDistance(t[i], t[j]) < 5 || (t[i].Length >= t[j].Length ? t[i].Contains(t[j]) : t[j].Contains(t[i])))
+                            if (skills[i].Length <= 5 && !(skills[i].Length >= skills[j].Length ? skills[i].Contains(skills[j]) : skills[j].Contains(skills[i])))
                             {
-                                if (t[i].Length <= 5 && !(t[i].Length >= t[j].Length ? t[i].Contains(t[j]) : t[j].Contains(t[i])))
-                                {
-                                    continue;
-                                }
-
-                                dict[t[i]].Add(t[j]);
-                                t.RemoveAt(j);
-                                j--;
+                                continue;
                             }
+
+                            dictionaryOfSkills[skills[i]].Add(skills[j]);
+                            skills.RemoveAt(j);
+                            j--;
                         }
                     }
-                    else
-                    {
-                        continue;
-                    }
                 }
-                var source = dict.OrderByDescending(d => d.Value.Count);
-                Skills = source;
+                else
+                {
+                    continue;
+                }
             }
+
+            var source = dictionaryOfSkills.OrderByDescending(d => d.Value.Count);
+            Skills = source;
         }
 
-        public void GoToPage()
+        private static int LevenshteinDistance(string string1, string string2)
         {
-            if(CurrentNumberOfPage > 0 && CurrentNumberOfPage <= TotalNumberOfPages)
-            {
-                CurrentPageOfVacancies = PagesOfVacancies[CurrentNumberOfPage - 1];
-            }
-        }
-
-        public int LevenshteinDistance(string string1, string string2)
-        {
-            if (string1 == null) throw new ArgumentNullException("string1");
-            if (string2 == null) throw new ArgumentNullException("string2");
+            if (string1 == null) throw new ArgumentNullException(nameof(string1));
+            if (string2 == null) throw new ArgumentNullException(nameof(string2));
             int diff;
             int[,] m = new int[string1.Length + 1, string2.Length + 1];
 

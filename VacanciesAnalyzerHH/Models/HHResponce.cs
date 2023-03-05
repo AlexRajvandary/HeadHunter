@@ -2,7 +2,7 @@
 
 namespace VacanciesAnalyzerHH.Models
 {
-    public class HHResponce
+    public class HHResponse
     {
         public List<Vacancy> items { get; set; }
         public int? found { get; set; }

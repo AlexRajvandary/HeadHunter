@@ -1,9 +1,13 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Controls;
+using System.Windows.Markup;
+using VacanciesAnalyzerHH.Models;
 
 namespace VacanciesAnalyzerHH
 {
@@ -19,13 +23,20 @@ namespace VacanciesAnalyzerHH
             httpClient.DefaultRequestHeaders.Add("HH-User-Agent", "");
         }
 
-        public async Task<HttpResponseMessage> GetVacancies(Dictionary<string, string> parameters)
+        public async Task<HHResponse> GetVacancies(string textSearch, int numOfPage, int numOfPages)
         {
+            var param = new Dictionary<string, string>();
+            param.TryAdd($"text", textSearch);
+            param.TryAdd($"page", numOfPage.ToString());
+            param.TryAdd($"per_page", numOfPages.ToString());
+
             try
             {
-                return await httpClient.GetAsync(GetUrl("vacancies", parameters));
+                var response = await httpClient.GetAsync(GetUrl("vacancies", param));
+                var data = await response.Content.ReadAsStringAsync();
+                return JsonConvert.DeserializeObject<HHResponse>(data);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return null;
             }
