@@ -6,6 +6,20 @@ namespace VacanciesAnalyzerHH.Support_services
     {
         public Dictionary<(Currency from, Currency to), double> CurrencyPairsValues { get; } = new Dictionary<(Currency from, Currency to), double>();
 
+        public bool TryConvert(double value,Currency from, Currency to, out double? result)
+        {
+            try
+            {
+                result = Convert(value, from, to);
+            }
+            catch
+            {
+                result = null;
+            }
+           
+            return result != null;
+        }
+
         public double? Convert(double value, Currency from, Currency to)
         {
             if(value < 0) return null;

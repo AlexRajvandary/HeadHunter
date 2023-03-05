@@ -88,7 +88,7 @@ namespace VacanciesAnalyzerHH
 
         private void Visualize()
         {
-            if (Data == null || Data.Count == 0 || Max == null || Min == null)
+            if (Data == null || Data.Count == 0 || Max == null)
             {
                 return;
             }

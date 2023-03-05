@@ -188,6 +188,7 @@ namespace VacanciesAnalyzerHH
 
             PagesOfVacancies.Add(new ObservableCollection<Vacancy>(deserializedData.items));
             CurrentPageOfVacancies = PagesOfVacancies[0];
+            NumOfLoadedVacancies += CurrentPageOfVacancies.Count;
 
             for (int i = 1; i < TotalNumberOfPages; i++)
             {
@@ -196,7 +197,7 @@ namespace VacanciesAnalyzerHH
                 p.TryAdd($"page", i.ToString());
                 p.TryAdd($"per_page", 50.ToString());
                 var d = await (await apiClient.GetVacancies(param)).Content.ReadAsStringAsync();
-                var t = JsonConvert.DeserializeObject<HHResponce>(data);
+                var t = JsonConvert.DeserializeObject<HHResponce>(d);
 
                 PagesOfVacancies.Add(new ObservableCollection<Vacancy>(t.items));
                 NumOfLoadedVacancies += t.items.Count;

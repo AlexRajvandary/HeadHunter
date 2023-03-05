@@ -91,8 +91,16 @@ namespace VacanciesAnalyzerHH.Models
         {
             if (From == null) return;
 
-            VisibleFrom = currencyConverter.Convert((double)From, Support_services.CurrencyExtension.StringToCurrency(Currency), to);
-            VisibleTo = currencyConverter.Convert((double)To, Support_services.CurrencyExtension.StringToCurrency(Currency), to);
+            if (currencyConverter.TryConvert((double)From, Support_services.CurrencyExtension.StringToCurrency(Currency), to, out var result))
+            {
+                VisibleFrom = result;
+            }
+
+            if (currencyConverter.TryConvert((double)To, Support_services.CurrencyExtension.StringToCurrency(Currency), to, out var resultFrom))
+            {
+                VisibleFrom = resultFrom;
+            }
+
             VisibleCurrency = to.CurrencyToString();
         }
 
