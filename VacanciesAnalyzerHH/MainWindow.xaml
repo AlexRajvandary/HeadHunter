@@ -51,7 +51,9 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Название" Binding="{Binding name}"/>
                             <DataGridTextColumn Header="Компания" Binding="{Binding employer.name}"/>
-                            <DataGridTextColumn Header="Зарплата" Binding="{Binding salary}"/>
+                            <DataGridTextColumn Header="Зарплата от" Binding="{Binding salary.From}"/>
+                            <DataGridTextColumn Header="Зарплата до" Binding="{Binding salary.To}"/>
+                            <DataGridTextColumn Header="Зарплата до" Binding="{Binding salary.Currency}"/>
                             <DataGridTextColumn Header="Адрес" Binding="{Binding address}"/>
                             <DataGridTextColumn Header="Опубликована" Binding="{Binding published_at}"/>
                             <DataGridTextColumn Header="График работы" Binding="{Binding schedule.name}"/>

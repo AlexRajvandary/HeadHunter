@@ -6,12 +6,14 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using VacanciesAnalyzerHH.Models;
+using VacanciesAnalyzerHH.Support_services;
 
 namespace VacanciesAnalyzerHH
 {
     public class MainViewModel : INotifyPropertyChanged
     {
         private ApiClient apiClient;
+        private CurrencyConverter currencyConverter = new CurrencyConverter();
         private string textSearch;
         private ObservableCollection<Vacancy> vacancies;
         private int totalNumberOfVacancies;
@@ -24,6 +26,11 @@ namespace VacanciesAnalyzerHH
         public MainViewModel()
         {
             apiClient = new ApiClient();
+            currencyConverter.SetValue(70d, Currency.USD, Currency.RUR);
+            currencyConverter.SetValue(431d, Currency.USD, Currency.KZT);
+            currencyConverter.SetValue(0.17d, Currency.KZT, Currency.RUR);
+
+            var t = currencyConverter.Convert(1, Currency.USD, Currency.RUR);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
