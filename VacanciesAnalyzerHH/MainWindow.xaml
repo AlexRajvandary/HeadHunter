@@ -61,7 +61,7 @@
                             <Button Content="Применить" Margin="5,2" Grid.Column="1" Grid.Row="4" />
                         </Grid>
                     </GroupBox>
-                  
+
                 </Expander>
                 <Expander Header="Фильтр данных" >
                     <GroupBox Header="Фильтр" Margin="5">
@@ -146,16 +146,20 @@
                 </StackPanel>
             </Expander>
         </StackPanel>
-        
+
         <TabControl Grid.Row="1">
             <TabItem Header="Все вакансии">
                 <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="6*"/>
+                    </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="auto"/>
                         <RowDefinition Height="auto"/>
                     </Grid.RowDefinitions>
 
-                    <StackPanel Grid.Row="0" Orientation="Vertical">
+                    <StackPanel Grid.Row="0" Orientation="Vertical" Grid.ColumnSpan="2" Margin="0,0,0,600" Grid.RowSpan="2">
                         <StackPanel.Style>
                             <Style TargetType="StackPanel">
                                 <Style.Triggers>
@@ -167,7 +171,7 @@
                         </StackPanel.Style>
                     </StackPanel>
 
-                    <DataGrid Grid.Row="1" ItemsSource="{Binding Vacancies}" SelectedItem="{Binding SelectedVacancy}" Height="600" Width="auto" AutoGenerateColumns="False">
+                    <DataGrid Grid.Row="1" ItemsSource="{Binding Vacancies}" SelectedItem="{Binding SelectedVacancy}" Height="600" Width="auto" AutoGenerateColumns="False" Grid.ColumnSpan="2">
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Название" Binding="{Binding name}"/>
                             <DataGridTextColumn Header="Компания" Binding="{Binding employer.name}"/>
@@ -186,9 +190,9 @@
                 </Grid>
             </TabItem>
             <TabItem Header="Анализ зарплат">
-                <lvc:CartesianChart Series="{Binding SalaryData.SeriesCollection}" LegendLocation="Left">
+                <lvc:CartesianChart Series="{Binding SalaryVisualizer.SeriesCollection}" LegendLocation="Left" Zoom="None" Hoverable="False">
                     <lvc:CartesianChart.AxisX>
-                        <lvc:Axis Title="Зарплаты" Labels="{Binding SalaryData.Labels}"/>
+                        <lvc:Axis Title="Зарплаты" Labels="{Binding SalaryVisualizer.Labels}"/>
                     </lvc:CartesianChart.AxisX>
                     <lvc:CartesianChart.AxisY>
                         <lvc:Axis Title="Количество вакансий"/>
@@ -205,7 +209,7 @@
                         </Style.Triggers>
                     </Style>
                 </TabItem.Style>
-               
+
                 <StackPanel Orientation="Vertical" Width="{Binding ElementName=mainWindow, Path=ActualWidth}">
 
                     <TextBlock Text="{Binding SelectedVacancy.name}" Margin="2,0,5,0" Padding="10,2"/>

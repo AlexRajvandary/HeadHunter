@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 
 namespace VacanciesAnalyzerHH
 {
-    public class SearchFilter : INotifyPropertyChanged
+    public class SearchFilterViewModel : INotifyPropertyChanged
     {
         private bool? isDegreeRequeired;
         private int? salaryLevel;
