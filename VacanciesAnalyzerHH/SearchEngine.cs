@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using VacanciesAnalyzerHH.Models;
 
@@ -9,6 +11,7 @@ namespace VacanciesAnalyzerHH
     public class SearchEngine : INotifyPropertyChanged
     {
         private readonly ApiClient apiClient;
+        private bool isSearchInProgress;
         private int numOfLoadedVacancies;
         private string textQuary;
         private int totalNumberOfVacancies;
@@ -20,6 +23,19 @@ namespace VacanciesAnalyzerHH
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        public bool IsSearchInProcess 
+        {
+            get => isSearchInProgress;
+            set
+            {
+                if(isSearchInProgress != value)
+                {
+                    isSearchInProgress = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public int NumOfLoadedVacancies
         {
@@ -64,31 +80,62 @@ namespace VacanciesAnalyzerHH
 
         public async IAsyncEnumerable<Vacancy> Search()
         {
+            IsSearchInProcess = true;
+
             var itemsPerPages = SearchFilter.ItemsPerPage;
             var hhResponse = await apiClient.GetVacancies(TextQuary, 0, itemsPerPages);
             var totalNumberOfPages = hhResponse.pages ?? 0;
             TotalNumberOfVacancies = hhResponse.found ?? 0;
 
-            for (var i = 0; i < totalNumberOfPages; i++)
+            if (totalNumberOfPages == 0)
             {
-                List<Vacancy> vacancies;
+                yield return null;
+            }
+            var tasks = new List<Task<HHResponse>>();
 
-                if (i == 0)
-                {
-                    vacancies = hhResponse.items;
-                }
-                else
-                {
-                    vacancies = (await apiClient.GetVacancies(TextQuary, i, itemsPerPages)).items;
-                }
+            for (var i = 1; i < totalNumberOfPages; i++)
+            {
+                tasks.Add(apiClient.GetVacancies(TextQuary, i, itemsPerPages));
+            }
 
-                foreach (var vacancy in vacancies)
+            var vacancies = (await Task.WhenAll(tasks))?.Select(hhResponse => hhResponse.items);
+
+            foreach (var item in hhResponse.items)
+            {
+                NumOfLoadedVacancies++;
+
+                
+                yield return item;
+            }
+
+            if (vacancies == null)
+            {
+                yield return null;
+            }
+            else
+            {
+                foreach (var vac in vacancies)
                 {
-                    NumOfLoadedVacancies++;
-                    await Task.Delay(10);
-                    yield return vacancy;
+                    if (vac == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (var v in vac)
+                    {
+                        NumOfLoadedVacancies++;
+
+                        if (NumOfLoadedVacancies % 10 == 0)
+                        {
+                            await Task.Delay(1);
+                        }
+
+                        yield return v;
+                    }
                 }
             }
+
+            IsSearchInProcess = false;
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

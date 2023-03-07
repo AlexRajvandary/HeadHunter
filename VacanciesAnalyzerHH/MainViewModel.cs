@@ -111,7 +111,7 @@ namespace VacanciesAnalyzerHH
                 }
             }
 
-            Skills = await skillsAnalyzer.GetSkills(Vacancies);
+            //Skills = await skillsAnalyzer.GetSkills(Vacancies);
         }
 
         private void OnPropertyChanged([CallerMemberName] string paramName = null)
