@@ -3,9 +3,10 @@ using System.Runtime.CompilerServices;
 
 namespace VacanciesAnalyzerHH
 {
-    public class SearchFilterViewModel : INotifyPropertyChanged
+    public class SearchFilter : INotifyPropertyChanged
     {
         private bool? isDegreeRequeired;
+        private int itemsPerPage = 50;
         private int? salaryLevel;
         private int? requeiredYearsOfExperience;
 
@@ -17,6 +18,16 @@ namespace VacanciesAnalyzerHH
             set
             {
                 isDegreeRequeired = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public int ItemsPerPage
+        {
+            get => itemsPerPage;
+            set
+            {
+                itemsPerPage = value;
                 OnPropertyChanged();
             }
         }

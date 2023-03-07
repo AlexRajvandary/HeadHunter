@@ -10,23 +10,16 @@ namespace VacanciesAnalyzerHH
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        private readonly ApiClient apiClient;
         private readonly CurrencyConverter currencyConverter;
         private readonly SkillsAnalyzer skillsAnalyzer;
 
-        private int numOfLoadedVacancies;
-        private SalaryVisualizer salaryAnalyzer;
         private Currency selectedCurrency;
         private Vacancy selectedVacancy;
         private IEnumerable<KeyValuePair<string, List<string>>> skills;
-        private string textSearch;
-        private int totalNumberOfVacancies;
         private ObservableCollection<Vacancy> vacancies;
-       
+
         public MainViewModel()
         {
-            apiClient = new ApiClient();
-
             currencyConverter = new CurrencyConverter();
             currencyConverter.SetValue(70d, Currency.USD, Currency.RUR);
             currencyConverter.SetValue(431d, Currency.USD, Currency.KZT);
@@ -35,49 +28,34 @@ namespace VacanciesAnalyzerHH
             skillsAnalyzer = new SkillsAnalyzer();
             Vacancies = new ObservableCollection<Vacancy>();
             SalaryVisualizer = new SalaryVisualizer(currencyConverter);
+            SearchEngine = new SearchEngine();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public int NumOfLoadedVacancies
-        {
-            get => numOfLoadedVacancies;
-            set
-            {
-                numOfLoadedVacancies = value;
-                OnPropertyChanged();
-            }
-        }
+        public SalaryVisualizer SalaryVisualizer { get; }
+
+        public SearchEngine SearchEngine { get; }
 
         public Currency SelectedCurrency
         {
             get => selectedCurrency;
             set
             {
-                selectedCurrency = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public string TextSearch
-        {
-            get => textSearch;
-            set
-            {
-                if (textSearch != value)
+                if (selectedCurrency != value)
                 {
-                    textSearch = value;
+                    selectedCurrency = value;
                     OnPropertyChanged();
                 }
             }
         }
 
-        public ObservableCollection<Vacancy> Vacancies
+        public Vacancy SelectedVacancy
         {
-            get => vacancies;
+            get => selectedVacancy;
             set
             {
-                vacancies = value;
+                selectedVacancy = value;
                 OnPropertyChanged();
             }
         }
@@ -92,32 +70,12 @@ namespace VacanciesAnalyzerHH
             }
         }
 
-        public Vacancy SelectedVacancy
+        public ObservableCollection<Vacancy> Vacancies
         {
-            get => selectedVacancy;
+            get => vacancies;
             set
             {
-                selectedVacancy = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public int TotalNumberOfVacancies
-        {
-            get => totalNumberOfVacancies;
-            set
-            {
-                totalNumberOfVacancies = value;
-                OnPropertyChanged();
-            }
-        }
-
-        public SalaryVisualizer SalaryVisualizer
-        {
-            get => salaryAnalyzer;
-            set
-            {
-                salaryAnalyzer = value;
+                vacancies = value;
                 OnPropertyChanged();
             }
         }
@@ -136,50 +94,23 @@ namespace VacanciesAnalyzerHH
 
         public async Task Search()
         {
-            if (string.IsNullOrWhiteSpace(TextSearch))
-            {
-                return;
-            }
-
             SalaryVisualizer.Clean();
             Skills = null;
             Vacancies.Clear();
-            NumOfLoadedVacancies = 0;
 
-            var itemsPerPage = 100;
-            var hhResponse = await apiClient.GetVacancies(TextSearch, 0, itemsPerPage);
-            var totalNumberOfPages = hhResponse.pages ?? 0;
-
-            TotalNumberOfVacancies = hhResponse.found ?? 0;
-
-            if (hhResponse == null || totalNumberOfPages == 0)
+            await foreach (var vacancy in SearchEngine.Search())
             {
-                return;
-            }
-
-            foreach (var vacancy in hhResponse.items)
-            {
-                Vacancies.Add(vacancy);
-                await SalaryVisualizer.VisualizeSalary(vacancy);
-                NumOfLoadedVacancies++;
-                await Task.Delay(10);
-            }
-
-            for (int i = 1; i < totalNumberOfPages; i++)
-            {
-                hhResponse = await apiClient.GetVacancies(TextSearch, i, itemsPerPage);
-
-                if (hhResponse.found == 0) { continue; }
-
-                foreach (var vacancy in hhResponse.items)
+                if (vacancy != null)
                 {
                     Vacancies.Add(vacancy);
                     await SalaryVisualizer.VisualizeSalary(vacancy);
-                    NumOfLoadedVacancies++;
-                    await Task.Delay(10);
+                }
+                else
+                {
+                    break;
                 }
             }
-            await Task.Delay(10);
+
             Skills = await skillsAnalyzer.GetSkills(Vacancies);
         }
 

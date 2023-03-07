@@ -27,7 +27,7 @@
         <StackPanel Orientation="Vertical" Grid.Row="0" Margin="10">
             <StackPanel Orientation="Horizontal" Grid.Row="0" Width="auto">
                 <TextBlock Text="Поиск" Margin="2,0,5,0" Padding="10,2" VerticalAlignment="Center"/>
-                <TextBox MinWidth="200" Width="auto" Text="{Binding TextSearch}" VerticalAlignment="Center" Height="25"/>
+                <TextBox MinWidth="200" Width="auto" Text="{Binding SearchEngine.TextQuary}" VerticalAlignment="Center" Height="25"/>
                 <Button Content="Найти" Padding="10,2" Click="Button_Click" DockPanel.Dock="Right" Width="80" Height="25" Margin="5,0,0,0"/>
                 <Button Content="Отменить" Padding="10,2" DockPanel.Dock="Right" Width="80" Height="25" Margin="5,0,0,0"/>
                 <ToggleButton x:Name="TogglePopupButton" Width="80" Height="25" Margin="5,0,0,0" HorizontalAlignment="Left">
@@ -122,9 +122,9 @@
                     </Style>
                 </StackPanel.Style>
                 <TextBlock Text="Найдено вакансий:" Margin="2,0,5,0" Padding="10,2" Height="25" VerticalAlignment="Center"/>
-                <TextBlock Text="{Binding TotalNumberOfVacancies}" Height="25" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding SearchEngine.TotalNumberOfVacancies}" Height="25" VerticalAlignment="Center"/>
                 <TextBlock Text="Загружено вакансий:" Margin="2,0,5,0" Padding="10,2" Height="25" VerticalAlignment="Center"/>
-                <TextBlock Text="{Binding NumOfLoadedVacancies}" Height="25" VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding SearchEngine.NumOfLoadedVacancies}" Height="25" VerticalAlignment="Center"/>
             </StackPanel>
             <Expander Header="Конвертировать валюту">
                 <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
