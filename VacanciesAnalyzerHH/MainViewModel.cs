@@ -11,7 +11,6 @@ namespace VacanciesAnalyzerHH
     public class MainViewModel : INotifyPropertyChanged
     {
         private readonly CurrencyConverter currencyConverter;
-        private readonly SkillsAnalyzer skillsAnalyzer;
 
         private Currency selectedCurrency;
         private Vacancy selectedVacancy;
@@ -25,7 +24,7 @@ namespace VacanciesAnalyzerHH
             currencyConverter.SetValue(431d, Currency.USD, Currency.KZT);
             currencyConverter.SetValue(0.17d, Currency.KZT, Currency.RUR);
 
-            skillsAnalyzer = new SkillsAnalyzer();
+            SkillsAnalyzer = new SkillsAnalyzer();
             Vacancies = new ObservableCollection<Vacancy>();
             SalaryVisualizer = new SalaryVisualizer(currencyConverter);
             SearchEngine = new SearchEngine();
@@ -70,6 +69,8 @@ namespace VacanciesAnalyzerHH
             }
         }
 
+        public SkillsAnalyzer SkillsAnalyzer { get; private set; }
+
         public ObservableCollection<Vacancy> Vacancies
         {
             get => vacancies;
@@ -111,7 +112,7 @@ namespace VacanciesAnalyzerHH
                 }
             }
 
-             await Task.Run(() => { Skills = skillsAnalyzer.GetSkills(Vacancies); });
+            await Task.Run(() => { Skills = SkillsAnalyzer.GetSkills(Vacancies); });
         }
 
         private void OnPropertyChanged([CallerMemberName] string paramName = null)

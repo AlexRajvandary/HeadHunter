@@ -1,14 +1,34 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using VacanciesAnalyzerHH.Models;
 
 namespace VacanciesAnalyzerHH
 {
-    public class SkillsAnalyzer
+    public class SkillsAnalyzer : INotifyPropertyChanged
     {
+        private bool isActive;
+        public event PropertyChangedEventHandler? PropertyChanged;
+
+        public bool IsActive
+        {
+            get => isActive;
+            set
+            {
+                if (isActive != value)
+                {
+                    isActive = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         public IEnumerable<KeyValuePair<string, List<string>>> GetSkills(ICollection<Vacancy> Vacancies)
         {
+            IsActive = true;
             var allSkillsRaw = Vacancies.Where(vacancy => vacancy.snippet != null).Select(vacancy => vacancy.snippet.requirement);
 
             var skills = new List<string>();
@@ -49,6 +69,7 @@ namespace VacanciesAnalyzerHH
                 }
             }
 
+            IsActive = false;
             return dictionaryOfSkills.OrderByDescending(d => d.Value.Count);
         }
 
@@ -72,6 +93,11 @@ namespace VacanciesAnalyzerHH
                 }
             }
             return m[string1.Length, string2.Length];
+        }
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
