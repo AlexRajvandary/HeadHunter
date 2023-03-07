@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using VacanciesAnalyzerHH.Models;
 
@@ -80,17 +79,21 @@ namespace VacanciesAnalyzerHH
 
         public async IAsyncEnumerable<Vacancy> Search()
         {
-            IsSearchInProcess = true;
-
+            TotalNumberOfVacancies = 0;
+            NumOfLoadedVacancies = 0;
+            
             var itemsPerPages = SearchFilter.ItemsPerPage;
             var hhResponse = await apiClient.GetVacancies(TextQuary, 0, itemsPerPages);
             var totalNumberOfPages = hhResponse.pages ?? 0;
             TotalNumberOfVacancies = hhResponse.found ?? 0;
-
+            
             if (totalNumberOfPages == 0)
             {
                 yield return null;
             }
+
+            IsSearchInProcess = true;
+
             var tasks = new List<Task<HHResponse>>();
 
             for (var i = 1; i < totalNumberOfPages; i++)
