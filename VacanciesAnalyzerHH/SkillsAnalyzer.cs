@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using VacanciesAnalyzerHH.Models;
 
 namespace VacanciesAnalyzerHH
 {
     public class SkillsAnalyzer
     {
-        public async Task<IEnumerable<KeyValuePair<string, List<string>>>> GetSkills(ICollection<Vacancy> Vacancies)
+        public IEnumerable<KeyValuePair<string, List<string>>> GetSkills(ICollection<Vacancy> Vacancies)
         {
             var allSkillsRaw = Vacancies.Where(vacancy => vacancy.snippet != null).Select(vacancy => vacancy.snippet.requirement);
 
@@ -27,11 +26,6 @@ namespace VacanciesAnalyzerHH
 
             for (int i = 0; i < skills.Count; i++)
             {
-                if(i % 500 == 0)
-                {
-                    await Task.Delay(10);
-                }
-               
                 if (dictionaryOfSkills.TryAdd(skills[i], new List<string> { skills[i] }))
                 {
                     for (int j = i + 1; j < skills.Count; j++)
