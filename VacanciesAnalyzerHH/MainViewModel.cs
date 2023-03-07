@@ -10,21 +10,24 @@ namespace VacanciesAnalyzerHH
 {
     public class MainViewModel : INotifyPropertyChanged
     {
-        private ApiClient apiClient;
-        private CurrencyConverter currencyConverter = new CurrencyConverter();
-        private string textSearch;
-        private ObservableCollection<Vacancy> vacancies;
-        private int totalNumberOfVacancies;
-        private Vacancy selectedVacancy;
-        private IEnumerable<KeyValuePair<string, List<string>>> skills;
-        private SkillsAnalyzer skillsAnalyzer;
+        private readonly ApiClient apiClient;
+        private readonly CurrencyConverter currencyConverter;
+        private readonly SkillsAnalyzer skillsAnalyzer;
+
+        private int numOfLoadedVacancies;
         private SalaryVisualizer salaryAnalyzer;
         private Currency selectedCurrency;
-        private int numOfLoadedVacancies;
-
+        private Vacancy selectedVacancy;
+        private IEnumerable<KeyValuePair<string, List<string>>> skills;
+        private string textSearch;
+        private int totalNumberOfVacancies;
+        private ObservableCollection<Vacancy> vacancies;
+       
         public MainViewModel()
         {
             apiClient = new ApiClient();
+
+            currencyConverter = new CurrencyConverter();
             currencyConverter.SetValue(70d, Currency.USD, Currency.RUR);
             currencyConverter.SetValue(431d, Currency.USD, Currency.KZT);
             currencyConverter.SetValue(0.17d, Currency.KZT, Currency.RUR);
@@ -142,7 +145,7 @@ namespace VacanciesAnalyzerHH
             Skills = null;
             Vacancies.Clear();
             NumOfLoadedVacancies = 0;
-            
+
             var itemsPerPage = 100;
             var hhResponse = await apiClient.GetVacancies(TextSearch, 0, itemsPerPage);
             var totalNumberOfPages = hhResponse.pages ?? 0;
@@ -166,6 +169,8 @@ namespace VacanciesAnalyzerHH
             {
                 hhResponse = await apiClient.GetVacancies(TextSearch, i, itemsPerPage);
 
+                if (hhResponse.found == 0) { continue; }
+
                 foreach (var vacancy in hhResponse.items)
                 {
                     Vacancies.Add(vacancy);
@@ -174,7 +179,7 @@ namespace VacanciesAnalyzerHH
                     await Task.Delay(10);
                 }
             }
-
+            await Task.Delay(10);
             Skills = await skillsAnalyzer.GetSkills(Vacancies);
         }
 

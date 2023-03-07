@@ -24,115 +24,103 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Vertical" Grid.Row="0">
-            <DockPanel Grid.Row="0" Width="auto">
+        <StackPanel Orientation="Vertical" Grid.Row="0" Margin="10">
+            <StackPanel Orientation="Horizontal" Grid.Row="0" Width="auto">
                 <TextBlock Text="Поиск" Margin="2,0,5,0" Padding="10,2" VerticalAlignment="Center"/>
-                <TextBox MinWidth="640" Width="auto" Text="{Binding TextSearch}" VerticalAlignment="Center" Height="25"/>
+                <TextBox MinWidth="200" Width="auto" Text="{Binding TextSearch}" VerticalAlignment="Center" Height="25"/>
                 <Button Content="Найти" Padding="10,2" Click="Button_Click" DockPanel.Dock="Right" Width="80" Height="25" Margin="5,0,0,0"/>
-            </DockPanel>
-            <StackPanel Orientation="Horizontal" Background="AliceBlue">
-                <Expander Header="Фильтр поиска" >
-                    <GroupBox Header="Фильтр" Margin="5">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
+                <Button Content="Отменить" Padding="10,2" DockPanel.Dock="Right" Width="80" Height="25" Margin="5,0,0,0"/>
+                <ToggleButton x:Name="TogglePopupButton" Width="80" Height="25" Margin="5,0,0,0" HorizontalAlignment="Left">
+                    <StackPanel>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Фильтр"/>
 
-                            <TextBlock Text="Уровень дохода" Grid.Column="0" Grid.Row="0"/>
-                            <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="0"/>
+                        <Popup Name="filterPopUp" IsOpen="{Binding IsChecked, ElementName=TogglePopupButton}">
+                            <Border BorderThickness="1">
+                                <GroupBox Header="Фильтр" Margin="5" Background="AliceBlue">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
 
-                            <TextBlock Text="Образование" Grid.Column="0" Grid.Row="1"/>
-                            <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="1"/>
+                                        <TextBlock Text="Уровень дохода" Grid.Column="0" Grid.Row="0"/>
+                                        <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="0"/>
 
-                            <TextBlock Text="Требуемый опыт работы" Grid.Column="0" Grid.Row="2"/>
-                            <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="2"/>
+                                        <TextBlock Text="Образование" Grid.Column="0" Grid.Row="1"/>
+                                        <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="1"/>
 
-                            <TextBlock Text="Тип занятости" Grid.Column="0" Grid.Row="3"/>
-                            <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="3"/>
+                                        <TextBlock Text="Требуемый опыт работы" Grid.Column="0" Grid.Row="2"/>
+                                        <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="2"/>
 
-                            <Button Content="Применить" Margin="5,2" Grid.Column="1" Grid.Row="4" />
-                        </Grid>
-                    </GroupBox>
+                                        <TextBlock Text="Тип занятости" Grid.Column="0" Grid.Row="3"/>
+                                        <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="3"/>
 
-                </Expander>
-                <Expander Header="Фильтр данных" >
-                    <GroupBox Header="Фильтр" Margin="5">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
+                                        <Button Content="Применить" Margin="5,2" Grid.Column="1" Grid.Row="4" />
+                                    </Grid>
+                                </GroupBox>
+                            </Border>
+                        </Popup>
+                    </StackPanel>
+                </ToggleButton>
 
-                            <TextBlock Text="Уровень дохода" Grid.Column="0" Grid.Row="0"/>
-                            <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="0"/>
+                <ToggleButton x:Name="TogglePopupButton2" Width="80" Height="25" Margin="5,0,0,0" HorizontalAlignment="Left">
+                    <StackPanel>
+                        <TextBlock VerticalAlignment="Center" HorizontalAlignment="Center" Text="Сводка"/>
 
-                            <TextBlock Text="Образование" Grid.Column="0" Grid.Row="1"/>
-                            <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="1"/>
+                        <Popup Name="summaryPopUp" IsOpen="{Binding IsChecked, ElementName=TogglePopupButton2}">
+                            <Border BorderThickness="1">
+                                <GroupBox Header="Фильтр" Margin="5">
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition/>
+                                            <ColumnDefinition/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                            <RowDefinition/>
+                                        </Grid.RowDefinitions>
 
-                            <TextBlock Text="Требуемый опыт работы" Grid.Column="0" Grid.Row="2"/>
-                            <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="2"/>
+                                        <TextBlock Text="Уровень дохода" Grid.Column="0" Grid.Row="0"/>
+                                        <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="0"/>
 
-                            <TextBlock Text="Тип занятости" Grid.Column="0" Grid.Row="3"/>
-                            <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="3"/>
+                                        <TextBlock Text="Образование" Grid.Column="0" Grid.Row="1"/>
+                                        <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="1"/>
 
-                            <Button Content="Применить" Margin="5,2" Grid.Column="1" Grid.Row="4" />
-                        </Grid>
-                    </GroupBox>
+                                        <TextBlock Text="Требуемый опыт работы" Grid.Column="0" Grid.Row="2"/>
+                                        <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="2"/>
 
-                </Expander>
-                <Expander Header="Справка" >
-                    <GroupBox Header="Справка" Margin="5">
-                        <Grid>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
-                            </Grid.ColumnDefinitions>
-                            <Grid.RowDefinitions>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
+                                        <TextBlock Text="Тип занятости" Grid.Column="0" Grid.Row="3"/>
+                                        <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="3"/>
 
-                            <TextBlock Text="Максимальный доход" Grid.Column="0" Grid.Row="0"/>
-                            <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="0"/>
-
-                            <TextBlock Text="Минимальный доход" Grid.Column="0" Grid.Row="1"/>
-                            <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="1"/>
-
-                            <TextBlock Text="Опыт работы" Grid.Column="0" Grid.Row="2"/>
-                            <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="2"/>
-
-                            <TextBlock Text="Опыт работы" Grid.Column="0" Grid.Row="3"/>
-                            <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="3"/>
-
-                            <TextBlock Text="Тип занятости" Grid.Column="0" Grid.Row="4"/>
-                            <TextBox Width="70" Margin="5,2" Grid.Column="1" Grid.Row="4"/>
-
-                            <Button Content="Применить" Margin="5,2" Grid.Column="1" Grid.Row="5" />
-                        </Grid>
-                    </GroupBox>
-
-                </Expander>
+                                        <Button Content="Применить" Margin="5,2" Grid.Column="1" Grid.Row="4" />
+                                    </Grid>
+                                </GroupBox>
+                            </Border>
+                        </Popup>
+                    </StackPanel>
+                </ToggleButton>
             </StackPanel>
+
             <StackPanel Orientation="Horizontal">
+                <StackPanel.Style>
+                    <Style TargetType="StackPanel">
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding TotalNumberOfVacancies}" Value="0">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                            </DataTrigger>
+                        </Style.Triggers>
+                    </Style>
+                </StackPanel.Style>
                 <TextBlock Text="Найдено вакансий:" Margin="2,0,5,0" Padding="10,2" Height="25" VerticalAlignment="Center"/>
                 <TextBlock Text="{Binding TotalNumberOfVacancies}" Height="25" VerticalAlignment="Center"/>
                 <TextBlock Text="Загружено вакансий:" Margin="2,0,5,0" Padding="10,2" Height="25" VerticalAlignment="Center"/>
@@ -147,47 +135,24 @@
             </Expander>
         </StackPanel>
 
-        <TabControl Grid.Row="1">
+        <TabControl Margin="10" Grid.Row="1">
             <TabItem Header="Все вакансии">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition/>
-                        <ColumnDefinition Width="6*"/>
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="auto"/>
-                        <RowDefinition Height="auto"/>
-                    </Grid.RowDefinitions>
-
-                    <StackPanel Grid.Row="0" Orientation="Vertical" Grid.ColumnSpan="2" Margin="0,0,0,600" Grid.RowSpan="2">
-                        <StackPanel.Style>
-                            <Style TargetType="StackPanel">
-                                <Style.Triggers>
-                                    <DataTrigger Binding="{Binding TotalNumberOfVacancies}" Value="0">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
-                                    </DataTrigger>
-                                </Style.Triggers>
-                            </Style>
-                        </StackPanel.Style>
-                    </StackPanel>
-
-                    <DataGrid Grid.Row="1" ItemsSource="{Binding Vacancies}" SelectedItem="{Binding SelectedVacancy}" Height="600" Width="auto" AutoGenerateColumns="False" Grid.ColumnSpan="2">
-                        <DataGrid.Columns>
-                            <DataGridTextColumn Header="Название" Binding="{Binding name}"/>
-                            <DataGridTextColumn Header="Компания" Binding="{Binding employer.name}"/>
-                            <DataGridTextColumn Header="Зарплата от" Binding="{Binding salary.From}"/>
-                            <DataGridTextColumn Header="Зарплата до" Binding="{Binding salary.To}"/>
-                            <DataGridTextColumn Header="Валюта" Binding="{Binding salary.Currency}"/>
-                            <DataGridTextColumn Header="Зарплата от (переведёная)" Binding="{Binding salary.VisibleFrom}"/>
-                            <DataGridTextColumn Header="Зарплата до (переведённая)" Binding="{Binding salary.VisibleTo}"/>
-                            <DataGridTextColumn Header="Валюта (переведённая)" Binding="{Binding salary.VisibleCurrency}"/>
-                            <DataGridTextColumn Header="Адрес" Binding="{Binding address}"/>
-                            <DataGridTextColumn Header="Опубликована" Binding="{Binding published_at}"/>
-                            <DataGridTextColumn Header="График работы" Binding="{Binding schedule.name}"/>
-                            <DataGridTextColumn Header="Контакты" Binding="{Binding contacts}"/>
-                        </DataGrid.Columns>
-                    </DataGrid>
-                </Grid>
+                <DataGrid Grid.Row="0" ItemsSource="{Binding Vacancies}" SelectedItem="{Binding SelectedVacancy}" Height="600" Width="auto" AutoGenerateColumns="False" Grid.ColumnSpan="2">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Название" Binding="{Binding name}"/>
+                        <DataGridTextColumn Header="Компания" Binding="{Binding employer.name}"/>
+                        <DataGridTextColumn Header="Зарплата от" Binding="{Binding salary.From}"/>
+                        <DataGridTextColumn Header="Зарплата до" Binding="{Binding salary.To}"/>
+                        <DataGridTextColumn Header="Валюта" Binding="{Binding salary.Currency}"/>
+                        <DataGridTextColumn Header="Зарплата от (переведёная)" Binding="{Binding salary.VisibleFrom}"/>
+                        <DataGridTextColumn Header="Зарплата до (переведённая)" Binding="{Binding salary.VisibleTo}"/>
+                        <DataGridTextColumn Header="Валюта (переведённая)" Binding="{Binding salary.VisibleCurrency}"/>
+                        <DataGridTextColumn Header="Адрес" Binding="{Binding address}"/>
+                        <DataGridTextColumn Header="Опубликована" Binding="{Binding published_at}"/>
+                        <DataGridTextColumn Header="График работы" Binding="{Binding schedule.name}"/>
+                        <DataGridTextColumn Header="Контакты" Binding="{Binding contacts}"/>
+                    </DataGrid.Columns>
+                </DataGrid>
             </TabItem>
             <TabItem Header="Анализ зарплат">
                 <lvc:CartesianChart Series="{Binding SalaryVisualizer.SeriesCollection}" LegendLocation="Left" Zoom="None" Hoverable="False">

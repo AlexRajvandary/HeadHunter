@@ -27,6 +27,11 @@ namespace VacanciesAnalyzerHH
 
             for (int i = 0; i < skills.Count; i++)
             {
+                if(i % 500 == 0)
+                {
+                    await Task.Delay(10);
+                }
+               
                 if (dictionaryOfSkills.TryAdd(skills[i], new List<string> { skills[i] }))
                 {
                     for (int j = i + 1; j < skills.Count; j++)
@@ -41,8 +46,6 @@ namespace VacanciesAnalyzerHH
                             dictionaryOfSkills[skills[i]].Add(skills[j]);
                             skills.RemoveAt(j);
                             j--;
-
-                            await Task.Delay(10);
                         }
                     }
                 }
