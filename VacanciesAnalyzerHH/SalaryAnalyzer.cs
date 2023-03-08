@@ -7,6 +7,7 @@ using LiveCharts;
 using LiveCharts.Wpf;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using System;
 
 namespace VacanciesAnalyzerHH
 {
@@ -14,8 +15,8 @@ namespace VacanciesAnalyzerHH
     {
         private CurrencyConverter currencyConverter;
         private List<(Salary, Vacancy)> data;
-        private double? max;
-        private double? min;
+        private double? max = 0;
+        private double? min = double.MaxValue;
         private double salaryStep = 10000;
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -81,6 +82,16 @@ namespace VacanciesAnalyzerHH
 
             vacancy.salary.ConvertTo(Currency.RUR, currencyConverter);
             var section = (int)(vacancy.salary.VisibleFrom / salaryStep);
+
+            if (Min > vacancy.salary.VisibleFrom)
+            {
+                Min = vacancy.salary.VisibleFrom;
+            }
+
+            if (Max < vacancy.salary.VisibleTo)
+            {
+                Max = vacancy.salary.VisibleTo;
+            }
 
             if (SeriesCollection[0].Values.Count > section)
             {

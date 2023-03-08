@@ -165,14 +165,31 @@
                 </DataGrid>
             </TabItem>
             <TabItem Header="Анализ зарплат">
-                <lvc:CartesianChart Series="{Binding SalaryVisualizer.SeriesCollection}" LegendLocation="Left" Zoom="None" Hoverable="False">
-                    <lvc:CartesianChart.AxisX>
-                        <lvc:Axis Title="Зарплаты" Labels="{Binding SalaryVisualizer.Labels}"/>
-                    </lvc:CartesianChart.AxisX>
-                    <lvc:CartesianChart.AxisY>
-                        <lvc:Axis Title="Количество вакансий"/>
-                    </lvc:CartesianChart.AxisY>
-                </lvc:CartesianChart>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="15"/>
+                        <RowDefinition Height="15"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Height="14" Text="Минимальная зарплата:"/>
+                        <TextBlock Height="14" Text="{Binding SalaryVisualizer.Min}" Margin="5,0"/>
+                    </StackPanel>
+
+                    <StackPanel Orientation="Horizontal" Grid.Row="1">
+                        <TextBlock Height="14" Text="Максимальная зарплата:"/>
+                        <TextBlock Height="14" Text="{Binding SalaryVisualizer.Max}" Margin="5,0"/>
+                    </StackPanel>
+                    
+                    <lvc:CartesianChart Series="{Binding SalaryVisualizer.SeriesCollection}" LegendLocation="Left" Zoom="None" Hoverable="False" Grid.ColumnSpan="2" Grid.Row="2">
+                        <lvc:CartesianChart.AxisX>
+                            <lvc:Axis Title="Зарплаты" Labels="{Binding SalaryVisualizer.Labels}"/>
+                        </lvc:CartesianChart.AxisX>
+                        <lvc:CartesianChart.AxisY>
+                            <lvc:Axis Title="Количество вакансий"/>
+                        </lvc:CartesianChart.AxisY>
+                    </lvc:CartesianChart>
+                </Grid>
             </TabItem>
             <TabItem Header="Подробнее о вакансии">
                 <TabItem.Style>
