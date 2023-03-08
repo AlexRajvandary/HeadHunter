@@ -10,6 +10,4 @@
         public string vacancies_url { get; set; }
         public bool? trusted { get; set; }
     }
-
-
 }

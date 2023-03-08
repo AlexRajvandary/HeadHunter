@@ -5,6 +5,4 @@
         public string requirement { get; set; }
         public string responsibility { get; set; }
     }
-
-
 }

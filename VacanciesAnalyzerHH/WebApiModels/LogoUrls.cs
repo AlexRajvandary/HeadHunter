@@ -12,6 +12,4 @@ namespace VacanciesAnalyzerHH.Models
         [JsonProperty("240")]
         public string _240 { get; set; }
     }
-
-
 }

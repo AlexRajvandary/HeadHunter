@@ -20,6 +20,4 @@ namespace VacanciesAnalyzerHH.Models
             return $"{building}, {city}, {street}";
         }
     }
-
-
 }
