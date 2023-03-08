@@ -20,10 +20,6 @@ namespace VacanciesAnalyzerHH
         public MainViewModel()
         {
             currencyConverter = new CurrencyConverter();
-            currencyConverter.SetValue(70d, Currency.USD, Currency.RUR);
-            currencyConverter.SetValue(431d, Currency.USD, Currency.KZT);
-            currencyConverter.SetValue(0.17d, Currency.KZT, Currency.RUR);
-
             SkillsAnalyzer = new SkillsAnalyzer();
             Vacancies = new ObservableCollection<Vacancy>();
             SalaryVisualizer = new SalaryVisualizer(currencyConverter);

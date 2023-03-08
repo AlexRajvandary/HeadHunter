@@ -4,7 +4,21 @@ namespace VacanciesAnalyzerHH.Support_services
 {
     public class CurrencyConverter
     {
-        public Dictionary<(Currency from, Currency to), double> CurrencyPairsValues { get; } = new Dictionary<(Currency from, Currency to), double>();
+        private Dictionary<(Currency from, Currency to), double> CurrencyPairsValues { get; } = new Dictionary<(Currency from, Currency to), double>();
+
+        public CurrencyConverter()
+        {
+            SetValue(70d, Currency.USD, Currency.RUR);
+            SetValue(431d, Currency.USD, Currency.KZT);
+            SetValue(0.95d, Currency.USD, Currency.EUR);
+            SetValue(0.84d, Currency.USD, Currency.GBP);
+            SetValue(80.39d, Currency.EUR, Currency.RUR);
+            SetValue(462.39d, Currency.EUR, Currency.KZT);
+            SetValue(0.89d, Currency.EUR, Currency.GBP);
+            SetValue(90.24d, Currency.RUR, Currency.GBP);
+            SetValue(0.17d, Currency.KZT, Currency.RUR);
+            SetValue(0.0019d, Currency.KZT, Currency.GBP);
+        }
 
         public bool TryConvert(double value,Currency from, Currency to, out double? result)
         {

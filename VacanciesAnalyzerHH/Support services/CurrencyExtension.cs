@@ -9,6 +9,8 @@
                 Currency.USD => "USD",
                 Currency.RUR => "RUR",
                 Currency.KZT => "KZT",
+                Currency.GBP => "GBP",
+                Currency.EUR => "EUR",
                 _ => currency.ToString(),
             };
         }
@@ -22,6 +24,8 @@
                 "USD" => Currency.USD,
                 "RUR" => Currency.RUR,
                 "KZT" => Currency.KZT,
+                "EUR" => Currency.EUR,
+                "GBP" => Currency.GBP,
                 _ => Currency.Unknown
             };
         }

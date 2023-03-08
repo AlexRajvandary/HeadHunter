@@ -5,6 +5,8 @@
         USD,
         RUR,
         KZT,
+        EUR,
+        GBP,
         Unknown
     }
 }
