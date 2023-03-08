@@ -155,7 +155,7 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock Text="Название"/>
-                                        <TextBox Margin="0,2"/>
+                                        <TextBox Margin="0,2" Text="{Binding ElementName=mainWindow, Path=DataFilter.Name}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.HeaderTemplate>
@@ -171,7 +171,7 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock Text="Компания"/>
-                                        <TextBox Margin="0,2"/>
+                                        <TextBox Margin="0,2"  Text="{Binding ElementName=mainWindow, Path=DataFilter.CompanyName}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.HeaderTemplate>
@@ -187,7 +187,8 @@
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
                                         <TextBlock Text="Зарплата"/>
-                                        <TextBox Margin="0,2"/>
+                                        <TextBox Margin="0,2"  Text="{Binding ElementName=mainWindow, Path=DataFilter.SalaryFrom}"/>
+                                        <TextBox Margin="0,2"  Text="{Binding ElementName=mainWindow, Path=DataFilter.SalaryTo}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.HeaderTemplate>

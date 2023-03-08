@@ -1,9 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using VacanciesAnalyzerHH.Models;
 
 namespace VacanciesAnalyzerHH
 {
-    public class DataFilter : INotifyPropertyChanged
+    public class DataFilter
     {
         private string adress;
         private string companyName;
@@ -120,9 +121,38 @@ namespace VacanciesAnalyzerHH
             }
         }
 
+        public bool Filter(Vacancy? vacancy)
+        {
+            if (vacancy == null) return false;
+
+            return CheckField(vacancy.address?.ToString(), Adress)
+                && CheckField(vacancy.employer?.name, CompanyName)
+                && CheckField(vacancy.name, Name)
+                && CheckField(vacancy.schedule?.name, Schedule)
+                && (vacancy.salary != null ?
+                        SalaryFrom != null
+                            ? vacancy.salary.VisibleFrom >= SalaryFrom
+                            : true
+                        : SalaryFrom != null
+                            ? false
+                            : true)
+                && (vacancy.salary != null ?
+                        SalaryTo != null
+                            ? vacancy.salary.VisibleTo <= SalaryTo
+                            : true
+                        : SalaryFrom != null
+                            ? false
+                            : true);
+        }
+
         public void OnProperyChanged([CallerMemberName] string propertyName = null)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        private static bool CheckField(string? field, string? filter)
+        {
+            return string.IsNullOrEmpty(field) || (string.IsNullOrEmpty(filter) || field.Contains(filter));
         }
     }
 }
