@@ -12,6 +12,7 @@ namespace VacanciesAnalyzerHH.Models
         private double? visibleFrom;
         private double? visibleTo;
         private string visibleCurrency;
+        private string visibleString;
 
         public Salary(int? from, int? to, string currency, bool? gross)
         {
@@ -21,6 +22,7 @@ namespace VacanciesAnalyzerHH.Models
             Gross = gross;
 
             CompleteData();
+            VisibleString = ToString();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
@@ -30,8 +32,12 @@ namespace VacanciesAnalyzerHH.Models
             get => from;
             set
             {
-                from = value;
-                visibleFrom = from;
+                if (from != value)
+                {
+                    from = value;
+                    visibleFrom = from;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -40,8 +46,12 @@ namespace VacanciesAnalyzerHH.Models
             get => to;
             set
             {
-                to = value;
-                visibleTo = to;
+                if (to != value)
+                {
+                    to = value;
+                    visibleTo = to;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -50,8 +60,12 @@ namespace VacanciesAnalyzerHH.Models
             get => currency;
             set
             {
-                currency = value;
-                visibleCurrency = currency;
+                if (currency != value)
+                {
+                    currency = value;
+                    visibleCurrency = currency;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -62,8 +76,11 @@ namespace VacanciesAnalyzerHH.Models
             get => visibleFrom;
             set
             {
-                visibleFrom = value;
-                OnPropertyChanged();
+                if (visibleFrom != value)
+                {
+                    visibleFrom = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -72,8 +89,11 @@ namespace VacanciesAnalyzerHH.Models
             get => visibleTo;
             set
             {
-                visibleTo = value;
-                OnPropertyChanged();
+                if (visibleTo != value)
+                {
+                    visibleTo = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -82,8 +102,24 @@ namespace VacanciesAnalyzerHH.Models
             get => visibleCurrency;
             set
             {
-                visibleCurrency = value;
-                OnPropertyChanged();
+                if (visibleCurrency != value)
+                {
+                    visibleCurrency = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
+        public string VisibleString
+        {
+            get => visibleString;
+            set
+            {
+                if (visibleString != value)
+                {
+                    visibleString = value;
+                    OnPropertyChanged();
+                }
             }
         }
 
@@ -110,11 +146,12 @@ namespace VacanciesAnalyzerHH.Models
             }
 
             VisibleCurrency = to.CurrencyToString();
+            VisibleString = ToString();
         }
 
         public override string ToString()
         {
-            return To.HasValue ? $"{From} - {To} {Currency}" : $"{From} {Currency}";
+            return $"{VisibleFrom:N} — {VisibleTo:N} {VisibleCurrency}";
         }
 
         private void CompleteData()

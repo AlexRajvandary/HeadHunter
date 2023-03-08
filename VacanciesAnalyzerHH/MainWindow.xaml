@@ -17,6 +17,7 @@
                 <x:Type TypeName="supSer:Currency"/>
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
+        <CollectionViewSource x:Name="VacanciesCollectionViewSource" x:Key="VacanciesCollectionViewSource" Source="{Binding Vacancies}"/>
         <BooleanToVisibilityConverter x:Key="boolToVis"/>
     </Window.Resources>
     <Grid>
@@ -147,20 +148,119 @@
 
         <TabControl Margin="10" Grid.Row="1">
             <TabItem Header="Все вакансии">
-                <DataGrid Grid.Row="0" ItemsSource="{Binding Vacancies}" SelectedItem="{Binding SelectedVacancy}" Height="600" Width="auto" AutoGenerateColumns="False" Grid.ColumnSpan="2">
+                <DataGrid Grid.Row="0" ItemsSource="{Binding Source={StaticResource VacanciesCollectionViewSource}}"  SelectedItem="{Binding SelectedVacancy}" Height="600" Width="auto" AutoGenerateColumns="False" Grid.ColumnSpan="2">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Название" Binding="{Binding name}"/>
-                        <DataGridTextColumn Header="Компания" Binding="{Binding employer.name}"/>
-                        <DataGridTextColumn Header="Зарплата от" Binding="{Binding salary.From}"/>
-                        <DataGridTextColumn Header="Зарплата до" Binding="{Binding salary.To}"/>
-                        <DataGridTextColumn Header="Валюта" Binding="{Binding salary.Currency}"/>
-                        <DataGridTextColumn Header="Зарплата от (переведёная)" Binding="{Binding salary.VisibleFrom}"/>
-                        <DataGridTextColumn Header="Зарплата до (переведённая)" Binding="{Binding salary.VisibleTo}"/>
-                        <DataGridTextColumn Header="Валюта (переведённая)" Binding="{Binding salary.VisibleCurrency}"/>
-                        <DataGridTextColumn Header="Адрес" Binding="{Binding address}"/>
-                        <DataGridTextColumn Header="Опубликована" Binding="{Binding published_at}"/>
-                        <DataGridTextColumn Header="График работы" Binding="{Binding schedule.name}"/>
-                        <DataGridTextColumn Header="Контакты" Binding="{Binding contacts}"/>
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Название"/>
+                                        <TextBox Margin="0,2"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding name}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Компания"/>
+                                        <TextBox Margin="0,2"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding employer.name}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Зарплата"/>
+                                        <TextBox Margin="0,2"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding salary.VisibleString}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Адресс"/>
+                                        <TextBox Margin="0,2"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding address}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Опубликована"/>
+                                        <TextBox Margin="0,2"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding published_at}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="График работы"/>
+                                        <TextBox Margin="0,2"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding schedule.name}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Контакты"/>
+                                        <TextBox Margin="0,2"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding contacts}"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
             </TabItem>
@@ -180,7 +280,7 @@
                         <TextBlock Height="14" Text="Максимальная зарплата:"/>
                         <TextBlock Height="14" Text="{Binding SalaryVisualizer.Max}" Margin="5,0"/>
                     </StackPanel>
-                    
+
                     <lvc:CartesianChart Series="{Binding SalaryVisualizer.SeriesCollection}" LegendLocation="Left" Zoom="None" Hoverable="False" Grid.ColumnSpan="2" Grid.Row="2">
                         <lvc:CartesianChart.AxisX>
                             <lvc:Axis Title="Зарплаты" Labels="{Binding SalaryVisualizer.Labels}"/>

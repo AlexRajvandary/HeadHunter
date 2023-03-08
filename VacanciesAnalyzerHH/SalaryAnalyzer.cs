@@ -13,7 +13,7 @@ namespace VacanciesAnalyzerHH
 {
     public class SalaryVisualizer : INotifyPropertyChanged
     {
-        private CurrencyConverter currencyConverter;
+        private readonly CurrencyConverter currencyConverter;
         private List<(Salary, Vacancy)> data;
         private double? max = 0;
         private double? min = double.MaxValue;
