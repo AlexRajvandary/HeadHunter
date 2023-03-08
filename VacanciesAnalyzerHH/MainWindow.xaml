@@ -8,7 +8,7 @@
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
         xmlns:supSer="clr-namespace:VacanciesAnalyzerHH.Support_services"
         mc:Ignorable="d"
-        Title="MainWindow" Height="700" Width="1000" Name="mainWindow">
+        Title="MainWindow" MinHeight="700" MinWidth="1200" Name="mainWindow">
     <Window.Resources>
         <ObjectDataProvider x:Key="EnumDataSource"
                         ObjectType="{x:Type sys:Enum}"
@@ -148,20 +148,131 @@
 
         <TabControl Margin="10" Grid.Row="1">
             <TabItem Header="Все вакансии">
-                <DataGrid Grid.Row="0" ItemsSource="{Binding Source={StaticResource VacanciesCollectionViewSource}}"  SelectedItem="{Binding SelectedVacancy}" Height="600" Width="auto" AutoGenerateColumns="False" Grid.ColumnSpan="2">
+                <DataGrid Grid.Row="0" 
+                          ItemsSource="{Binding Source={StaticResource VacanciesCollectionViewSource}}" 
+                          SelectedItem="{Binding SelectedVacancy}" 
+                          Height="600" 
+                          Width="auto"
+                          AutoGenerateColumns="False" 
+                          Grid.ColumnSpan="2" 
+                          CanUserAddRows="False"
+                          CanUserDeleteRows="False"
+                          IsReadOnly="True">
                     <DataGrid.Columns>
-                        <DataGridTemplateColumn>
+                        <DataGridTemplateColumn Width="150">
                             <DataGridTemplateColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="Название"/>
-                                        <TextBox Margin="0,2" Text="{Binding ElementName=mainWindow, Path=DataFilter.Name}"/>
+                                        <TextBlock Text="Название" FontSize="15"/>
+                                        <TextBox x:Name="NameTextBoxFilter" Margin="0,2" Height="16" Width="120" TextChanged="VacancyNameFilterChanged" Visibility="{Binding ElementName=mainWindow, Path=DataFilter.IsFilterActive, Converter={StaticResource boolToVis}}"/>
                                     </StackPanel>
                                 </DataTemplate>
                             </DataGridTemplateColumn.HeaderTemplate>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <TextBlock Text="{Binding name}"/>
+                                    <TextBlock Text="{Binding name}" TextWrapping="WrapWithOverflow"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="150">
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Компания"  FontSize="15"/>
+                                        <TextBox Margin="0,2" Height="16"  TextChanged="VacancyCompanyNameFilterChanged" Width="120" Visibility="{Binding ElementName=mainWindow, Path=DataFilter.IsFilterActive, Converter={StaticResource boolToVis}}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding employer.name}" TextWrapping="WrapWithOverflow"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="190">
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Зарплата" HorizontalAlignment="Center"  FontSize="15"/>
+                                        <StackPanel Orientation="Horizontal" Margin="5" Visibility="{Binding ElementName=mainWindow, Path=DataFilter.IsFilterActive, Converter={StaticResource boolToVis}}">
+                                            <TextBlock Text="От"/>
+                                            <TextBox Margin="5,0" Height="16" Width="60" TextChanged="VacancySalaryFromChanged"/>
+                                            <TextBlock Text="До"/>
+                                            <TextBox Margin="5,0" Height="16"  TextChanged="VacancySalaryToChanged"  Width="60"/>
+                                        </StackPanel>
+                                        
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding salary.VisibleString}" TextWrapping="WrapWithOverflow"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="150">
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Адресс" FontSize="15"/>
+                                        <TextBox Margin="0,2" Height="16" Width="120" Visibility="{Binding ElementName=mainWindow, Path=DataFilter.IsFilterActive, Converter={StaticResource boolToVis}}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding address}" TextWrapping="WrapWithOverflow"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="150">
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Опубликована"  FontSize="15"/>
+                                        <TextBox Margin="0,2" Height="16" Width="120" Visibility="{Binding ElementName=mainWindow, Path=DataFilter.IsFilterActive, Converter={StaticResource boolToVis}}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding published_at}" TextWrapping="WrapWithOverflow"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="150">
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="График работы"  FontSize="15"/>
+                                        <TextBox Margin="0,2" Height="16" Width="120" Visibility="{Binding ElementName=mainWindow, Path=DataFilter.IsFilterActive, Converter={StaticResource boolToVis}}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding schedule.name}" TextWrapping="WrapWithOverflow"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <DataGridTemplateColumn Width="150">
+                            <DataGridTemplateColumn.HeaderTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <TextBlock Text="Контакты"  FontSize="15"/>
+                                        <TextBox Margin="0,2" Height="16" Width="120" Visibility="{Binding ElementName=mainWindow, Path=DataFilter.IsFilterActive, Converter={StaticResource boolToVis}}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.HeaderTemplate>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding contacts}" TextWrapping="WrapWithOverflow"/>
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
@@ -170,97 +281,10 @@
                             <DataGridTemplateColumn.HeaderTemplate>
                                 <DataTemplate>
                                     <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="Компания"/>
-                                        <TextBox Margin="0,2"  Text="{Binding ElementName=mainWindow, Path=DataFilter.CompanyName}"/>
-                                    </StackPanel>
+                                        <CheckBox Content="Включить фильтр" FontSize="15" IsChecked="{Binding ElementName=mainWindow, Path=DataFilter.IsFilterActive}"/>
+                                    </StackPanel> 
                                 </DataTemplate>
                             </DataGridTemplateColumn.HeaderTemplate>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding employer.name}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn>
-                            <DataGridTemplateColumn.HeaderTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="Зарплата"/>
-                                        <TextBox Margin="0,2"  Text="{Binding ElementName=mainWindow, Path=DataFilter.SalaryFrom}"/>
-                                        <TextBox Margin="0,2"  Text="{Binding ElementName=mainWindow, Path=DataFilter.SalaryTo}"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.HeaderTemplate>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding salary.VisibleString}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn>
-                            <DataGridTemplateColumn.HeaderTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="Адресс"/>
-                                        <TextBox Margin="0,2"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.HeaderTemplate>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding address}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn>
-                            <DataGridTemplateColumn.HeaderTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="Опубликована"/>
-                                        <TextBox Margin="0,2"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.HeaderTemplate>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding published_at}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn>
-                            <DataGridTemplateColumn.HeaderTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="График работы"/>
-                                        <TextBox Margin="0,2"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.HeaderTemplate>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding schedule.name}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
-                        </DataGridTemplateColumn>
-
-                        <DataGridTemplateColumn>
-                            <DataGridTemplateColumn.HeaderTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Vertical">
-                                        <TextBlock Text="Контакты"/>
-                                        <TextBox Margin="0,2"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.HeaderTemplate>
-                            <DataGridTemplateColumn.CellTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding contacts}"/>
-                                </DataTemplate>
-                            </DataGridTemplateColumn.CellTemplate>
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>

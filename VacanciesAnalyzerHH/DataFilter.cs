@@ -14,6 +14,7 @@ namespace VacanciesAnalyzerHH
         private double? salaryFrom;
         private double? salaryTo;
         private string schedule;
+        private bool isFilterActive;
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -52,6 +53,24 @@ namespace VacanciesAnalyzerHH
                 {
                     contacts = value;
                     OnProperyChanged();
+                }
+            }
+        }
+
+        public bool IsFilterActive
+        {
+            get => isFilterActive;
+            set
+            {
+                if (isFilterActive != value)
+                {
+                    isFilterActive = value;
+                    OnProperyChanged();
+
+                    if (!value)
+                    {
+                        Clean();
+                    }
                 }
             }
         }
@@ -153,6 +172,18 @@ namespace VacanciesAnalyzerHH
         private static bool CheckField(string? field, string? filter)
         {
             return string.IsNullOrEmpty(field) || (string.IsNullOrEmpty(filter) || field.Contains(filter));
+        }
+
+        private void Clean()
+        {
+            Adress = null;
+            CompanyName = null;
+            Contacts = null;
+            CompanyName = null;
+            Schedule = null;
+            SalaryFrom = null;
+            SalaryTo = null;
+            Published = null;
         }
     }
 }
