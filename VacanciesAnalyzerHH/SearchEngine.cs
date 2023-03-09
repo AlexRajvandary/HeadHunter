@@ -88,6 +88,7 @@ namespace VacanciesAnalyzerHH
         {
             TotalNumberOfVacancies = 0;
             NumOfLoadedVacancies = 0;
+            IsSearchInProcess = true;
 
             var itemsPerPages = SearchFilter.ItemsPerPage;
             var hhResponse = await apiClient.GetVacancies(TextQuary, 0, itemsPerPages);
@@ -96,10 +97,9 @@ namespace VacanciesAnalyzerHH
 
             if (totalNumberOfPages == 0)
             {
+                IsSearchInProcess = false;
                 return null;
             }
-
-            IsSearchInProcess = true;
 
             var tasks = new List<Task<HHResponse>>();
             var result = new List<Vacancy>();

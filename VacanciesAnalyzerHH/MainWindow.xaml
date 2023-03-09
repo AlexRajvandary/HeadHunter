@@ -140,9 +140,7 @@
                 <StackPanel Orientation="Horizontal" Visibility="{Binding SearchEngine.IsSearchInProcess, Converter={StaticResource boolToVis}}">
                     <TextBlock Text="Поиск" Margin="5"/>
                     <ProgressBar 
-                    Maximum="{Binding SearchEngine.TotalNumberOfVacancies}" 
-                    Minimum="0" 
-                    Value="{Binding SearchEngine.NumOfLoadedVacancies}" 
+                    IsIndeterminate="True"
                     Foreground="Green" 
                     Width="150" 
                     Height="14"
@@ -160,6 +158,10 @@
                     Width="150" 
                     Height="14"
                     Margin="5"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <TextBlock Text="Найдено:" Margin="5"/>
+                    <TextBlock Text="{Binding SearchEngine.TotalNumberOfVacancies}" Margin="5"/>
                 </StackPanel>
                 <Expander Header="Конвертировать валюту">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
