@@ -27,7 +27,7 @@ namespace VacanciesAnalyzerHH
 
         public MainViewModel MainViewModel { get; set; }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private async void OnSearchButtonClicked(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -77,6 +77,11 @@ namespace VacanciesAnalyzerHH
             {
                 DataFilter.SalaryTo = value;
             }
+        }
+
+        private void OnCancelButtonClicked(object sender, RoutedEventArgs e)
+        {
+            MainViewModel?.Cancel();
         }
     }
 }

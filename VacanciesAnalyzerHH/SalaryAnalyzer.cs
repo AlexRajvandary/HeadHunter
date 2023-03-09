@@ -75,7 +75,7 @@ namespace VacanciesAnalyzerHH
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public async Task VisualizeSalary(Vacancy vacancy)
+        public void VisualizeSalary(Vacancy vacancy)
         {
             if (vacancy == null) return;
             if (vacancy.salary == null) return;
@@ -110,8 +110,6 @@ namespace VacanciesAnalyzerHH
                     {
                         SeriesCollection[0].Values.Add(1);
                     }
-
-                    await Task.Delay(10);
                 }
             }
         }

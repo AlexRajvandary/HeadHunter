@@ -1,8 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows.Documents;
 using VacanciesAnalyzerHH.Models;
 
 namespace VacanciesAnalyzerHH
@@ -23,12 +25,12 @@ namespace VacanciesAnalyzerHH
 
         public event PropertyChangedEventHandler? PropertyChanged;
 
-        public bool IsSearchInProcess 
+        public bool IsSearchInProcess
         {
             get => isSearchInProgress;
             set
             {
-                if(isSearchInProgress != value)
+                if (isSearchInProgress != value)
                 {
                     isSearchInProgress = value;
                     OnPropertyChanged();
@@ -77,68 +79,65 @@ namespace VacanciesAnalyzerHH
             }
         }
 
-        public async IAsyncEnumerable<Vacancy> Search()
+        public void Cancel()
+        {
+            apiClient?.Cancel();
+        }
+
+        public async Task<List<Vacancy>> Search()
         {
             TotalNumberOfVacancies = 0;
             NumOfLoadedVacancies = 0;
-            
+
             var itemsPerPages = SearchFilter.ItemsPerPage;
             var hhResponse = await apiClient.GetVacancies(TextQuary, 0, itemsPerPages);
             var totalNumberOfPages = hhResponse.pages ?? 0;
             TotalNumberOfVacancies = hhResponse.found ?? 0;
-            
+
             if (totalNumberOfPages == 0)
             {
-                yield return null;
+                return null;
             }
 
             IsSearchInProcess = true;
 
             var tasks = new List<Task<HHResponse>>();
+            var result = new List<Vacancy>();
 
             for (var i = 1; i < totalNumberOfPages; i++)
             {
                 tasks.Add(apiClient.GetVacancies(TextQuary, i, itemsPerPages));
             }
 
-            var vacancies = (await Task.WhenAll(tasks))?.Select(hhResponse => hhResponse.items);
+            var pagesOfVacancies = (await Task.WhenAll(tasks))?.Select(hhResponse => hhResponse.items).ToList();
 
-            foreach (var item in hhResponse.items)
+            foreach (var vacancy in hhResponse.items)
             {
-                NumOfLoadedVacancies++;
-
-                
-                yield return item;
+                result.Add(vacancy);
             }
 
-            if (vacancies == null)
+            if (pagesOfVacancies == null)
             {
-                yield return null;
+                return null;
             }
             else
             {
-                foreach (var vac in vacancies)
+                foreach (var pageOfVacancies in pagesOfVacancies)
                 {
-                    if (vac == null)
+                    if (pageOfVacancies == null)
                     {
                         continue;
                     }
 
-                    foreach (var v in vac)
+                    foreach (var vacancy in pageOfVacancies)
                     {
-                        NumOfLoadedVacancies++;
-
-                        if (NumOfLoadedVacancies % 10 == 0)
-                        {
-                            await Task.Delay(1);
-                        }
-
-                        yield return v;
+                        result.Add(vacancy);
                     }
                 }
             }
 
             IsSearchInProcess = false;
+            return result;
         }
 
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)

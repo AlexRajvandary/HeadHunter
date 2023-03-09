@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.DirectoryServices.ActiveDirectory;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Security.Policy;
+using System.Threading;
+using System.Threading.Tasks;
 using VacanciesAnalyzerHH.Models;
 
 namespace VacanciesAnalyzerHH
 {
-    public class SkillsAnalyzer : INotifyPropertyChanged
+    public class SkillsAnalyzer : INotifyPropertyChanged, IDisposable
     {
+        private CancellationTokenSource? cancellationTokenSource;
         private bool isActive;
         public event PropertyChangedEventHandler? PropertyChanged;
 
@@ -26,51 +29,76 @@ namespace VacanciesAnalyzerHH
             }
         }
 
-        public IEnumerable<KeyValuePair<string, List<string>>> GetSkills(ICollection<Vacancy> Vacancies)
+        public void Cancel()
         {
-            IsActive = true;
-            var allSkillsRaw = Vacancies.Where(vacancy => vacancy.snippet != null).Select(vacancy => vacancy.snippet.requirement);
+            cancellationTokenSource?.Cancel();
+        }
 
-            var skills = new List<string>();
-            var dictionaryOfSkills = new Dictionary<string, List<string>>();
+        public void Dispose()
+        {
+            cancellationTokenSource?.Dispose();
+            cancellationTokenSource = null;
+        }
 
-            foreach (var skill in allSkillsRaw)
+        public async Task<IEnumerable<KeyValuePair<string, List<string>>>?> GetSkills(ICollection<Vacancy> vacancies)
+        {
+            try
             {
-                if (skill == null) continue;
+                cancellationTokenSource ??= new CancellationTokenSource();
 
-                var s = skill.ToLower().Split(new string[] { ";", "уверенное", "знание", "опыт", "уметь", "знать", ",", ". " }, options: System.StringSplitOptions.TrimEntries);
-                skills.AddRange(s);
-            }
-
-            skills.RemoveAll(word => string.IsNullOrWhiteSpace(word));
-
-            for (int i = 0; i < skills.Count; i++)
-            {
-                if (dictionaryOfSkills.TryAdd(skills[i], new List<string> { skills[i] }))
+                return await Task.Run<IEnumerable<KeyValuePair<string, List<string>>>>(() =>
                 {
-                    for (int j = i + 1; j < skills.Count; j++)
-                    {
-                        if (LevenshteinDistance(skills[i], skills[j]) < 5 || (skills[i].Length >= skills[j].Length ? skills[i].Contains(skills[j]) : skills[j].Contains(skills[i])))
-                        {
-                            if (skills[i].Length <= 5 && !(skills[i].Length >= skills[j].Length ? skills[i].Contains(skills[j]) : skills[j].Contains(skills[i])))
-                            {
-                                continue;
-                            }
+                    IsActive = true;
+                    var allSkillsRaw = vacancies.Where(vacancy => vacancy.snippet != null).Select(vacancy => vacancy.snippet.requirement);
 
-                            dictionaryOfSkills[skills[i]].Add(skills[j]);
-                            skills.RemoveAt(j);
-                            j--;
+                    var skills = new List<string>();
+                    var dictionaryOfSkills = new Dictionary<string, List<string>>();
+
+                    foreach (var skill in allSkillsRaw)
+                    {
+                        if (skill == null) continue;
+
+                        var s = skill.ToLower().Split(new string[] { ";", "уверенное", "знание", "опыт", "уметь", "знать", ",", ". " }, options: System.StringSplitOptions.TrimEntries);
+                        skills.AddRange(s);
+                    }
+
+                    skills.RemoveAll(word => string.IsNullOrWhiteSpace(word));
+
+                    for (int i = 0; i < skills.Count; i++)
+                    {
+                        if (dictionaryOfSkills.TryAdd(skills[i], new List<string> { skills[i] }))
+                        {
+                            for (int j = i + 1; j < skills.Count; j++)
+                            {
+                                if (LevenshteinDistance(skills[i], skills[j]) < 5 || (skills[i].Length >= skills[j].Length ? skills[i].Contains(skills[j]) : skills[j].Contains(skills[i])))
+                                {
+                                    if (skills[i].Length <= 5 && !(skills[i].Length >= skills[j].Length ? skills[i].Contains(skills[j]) : skills[j].Contains(skills[i])))
+                                    {
+                                        continue;
+                                    }
+
+                                    dictionaryOfSkills[skills[i]].Add(skills[j]);
+                                    skills.RemoveAt(j);
+                                    j--;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            continue;
                         }
                     }
-                }
-                else
-                {
-                    continue;
-                }
-            }
 
-            IsActive = false;
-            return dictionaryOfSkills.OrderByDescending(d => d.Value.Count);
+                    IsActive = false;
+                    return dictionaryOfSkills.OrderByDescending(d => d.Value.Count);
+                }, cancellationTokenSource.Token);
+            }
+            catch (OperationCanceledException)
+            {
+                cancellationTokenSource?.Dispose();
+                cancellationTokenSource = new CancellationTokenSource();
+                return null;
+            }
         }
 
         private static int LevenshteinDistance(string string1, string string2)

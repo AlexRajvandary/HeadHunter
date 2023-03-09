@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -77,6 +78,12 @@ namespace VacanciesAnalyzerHH
             }
         }
 
+        public void Cancel()
+        {
+            SearchEngine?.Cancel();
+            SkillsAnalyzer?.Cancel();
+        }
+
         public void ConvertSalaries()
         {
             if (SelectedCurrency != Currency.Unknown)
@@ -95,12 +102,19 @@ namespace VacanciesAnalyzerHH
             Skills = null;
             Vacancies.Clear();
 
-            await foreach (var vacancy in SearchEngine.Search())
+            var vacancies = await SearchEngine.Search();
+
+            if (vacancies == null)
+            {
+                return;
+            }
+
+            foreach (var vacancy in vacancies)
             {
                 if (vacancy != null)
                 {
                     Vacancies.Add(vacancy);
-                    await SalaryVisualizer.VisualizeSalary(vacancy);
+                    SalaryVisualizer.VisualizeSalary(vacancy);
                 }
                 else
                 {
@@ -108,7 +122,7 @@ namespace VacanciesAnalyzerHH
                 }
             }
 
-            await Task.Run(() => { Skills = SkillsAnalyzer.GetSkills(Vacancies); });
+            Skills = await SkillsAnalyzer.GetSkills(Vacancies);
         }
 
         private void OnPropertyChanged([CallerMemberName] string paramName = null)
