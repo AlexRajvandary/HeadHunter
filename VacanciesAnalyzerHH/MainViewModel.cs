@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
@@ -56,16 +55,6 @@ namespace VacanciesAnalyzerHH
             }
         }
 
-        public IEnumerable<KeyValuePair<string, List<string>>> Skills
-        {
-            get => skills;
-            set
-            {
-                skills = value;
-                OnPropertyChanged();
-            }
-        }
-
         public SkillsAnalyzer SkillsAnalyzer { get; private set; }
 
         public ObservableCollection<Vacancy> Vacancies
@@ -99,7 +88,7 @@ namespace VacanciesAnalyzerHH
         public async Task Search()
         {
             SalaryVisualizer.Clean();
-            Skills = null;
+            SkillsAnalyzer.Skills.Clear();
             Vacancies.Clear();
 
             var vacancies = await SearchEngine.Search();
@@ -122,7 +111,17 @@ namespace VacanciesAnalyzerHH
                 }
             }
 
-            Skills = await SkillsAnalyzer.GetSkills(Vacancies);
+            foreach (var vacancy in vacancies)
+            {
+                if (vacancy != null)
+                {
+                    await SkillsAnalyzer.AnalyzeSkills(vacancy);
+                }
+                else
+                {
+                    break;
+                }
+            }
         }
 
         private void OnPropertyChanged([CallerMemberName] string paramName = null)

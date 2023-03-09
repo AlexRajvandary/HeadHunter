@@ -1,19 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Security.Policy;
 using System.Threading;
 using System.Threading.Tasks;
 using VacanciesAnalyzerHH.Models;
 
 namespace VacanciesAnalyzerHH
 {
-    public class SkillsAnalyzer : INotifyPropertyChanged, IDisposable
+    public partial class SkillsAnalyzer : INotifyPropertyChanged, IDisposable
     {
         private CancellationTokenSource? cancellationTokenSource;
+        private string[] delimeters = new string[] { ";", "уверенное", "знание", "опыт", "уметь", "знать", ",", ". " };
         private bool isActive;
+
         public event PropertyChangedEventHandler? PropertyChanged;
 
         public bool IsActive
@@ -29,6 +31,24 @@ namespace VacanciesAnalyzerHH
             }
         }
 
+        public ObservableCollection<Skill> Skills { get; set; } = new ObservableCollection<Skill>();
+
+        public async Task AnalyzeSkills(Vacancy vacancy)
+        {
+            if (string.IsNullOrWhiteSpace(vacancy?.snippet?.requirement))
+            {
+                return;
+            }
+
+            var vacancySkills = GetSkills(vacancy.snippet.requirement).ToList();
+            vacancySkills.RemoveAll(st => st == string.Empty);
+
+            foreach (var skill in vacancySkills)
+            {
+                await CompareSkills(skill).ConfigureAwait(true);
+            }
+        }
+
         public void Cancel()
         {
             cancellationTokenSource?.Cancel();
@@ -40,71 +60,54 @@ namespace VacanciesAnalyzerHH
             cancellationTokenSource = null;
         }
 
-        public async Task<IEnumerable<KeyValuePair<string, List<string>>>?> GetSkills(ICollection<Vacancy> vacancies)
+        private async Task<(bool, string)> AreSkillsEqual(string skill, string key)
         {
-            try
+            return await Task.Run(() =>
             {
-                cancellationTokenSource ??= new CancellationTokenSource();
+                var isEqual = (LevenshteinDistance(skill, key) < 5 || (skill.Length >= key.Length ? skill.Contains(key) : key.Contains(skill))) && skill.Length <= 5 && !(skill?.Length >= key?.Length ? skill?.Contains(key) ?? false : key?.Contains(skill) ?? false);
+                return (isEqual, key);
+            }).ConfigureAwait(true);
+        }
 
-                return await Task.Run<IEnumerable<KeyValuePair<string, List<string>>>>(() =>
-                {
-                    IsActive = true;
-                    var allSkillsRaw = vacancies.Where(vacancy => vacancy.snippet != null).Select(vacancy => vacancy.snippet.requirement);
+        private async Task CompareSkills(string skill)
+        {
+            var tasks = new List<Task<(bool, string)>>();
 
-                    var skills = new List<string>();
-                    var dictionaryOfSkills = new Dictionary<string, List<string>>();
-
-                    foreach (var skill in allSkillsRaw)
-                    {
-                        if (skill == null) continue;
-
-                        var s = skill.ToLower().Split(new string[] { ";", "уверенное", "знание", "опыт", "уметь", "знать", ",", ". " }, options: System.StringSplitOptions.TrimEntries);
-                        skills.AddRange(s);
-                    }
-
-                    skills.RemoveAll(word => string.IsNullOrWhiteSpace(word));
-
-                    for (int i = 0; i < skills.Count; i++)
-                    {
-                        if (dictionaryOfSkills.TryAdd(skills[i], new List<string> { skills[i] }))
-                        {
-                            for (int j = i + 1; j < skills.Count; j++)
-                            {
-                                if (LevenshteinDistance(skills[i], skills[j]) < 5 || (skills[i].Length >= skills[j].Length ? skills[i].Contains(skills[j]) : skills[j].Contains(skills[i])))
-                                {
-                                    if (skills[i].Length <= 5 && !(skills[i].Length >= skills[j].Length ? skills[i].Contains(skills[j]) : skills[j].Contains(skills[i])))
-                                    {
-                                        continue;
-                                    }
-
-                                    dictionaryOfSkills[skills[i]].Add(skills[j]);
-                                    skills.RemoveAt(j);
-                                    j--;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            continue;
-                        }
-                    }
-
-                    IsActive = false;
-                    return dictionaryOfSkills.OrderByDescending(d => d.Value.Count);
-                }, cancellationTokenSource.Token);
-            }
-            catch (OperationCanceledException)
+            if (Skills.Count == 0)
             {
-                cancellationTokenSource?.Dispose();
-                cancellationTokenSource = new CancellationTokenSource();
-                return null;
+                Skills.Add(new Skill() { Value = skill, Occurances = 1 });
+                return;
             }
+
+            foreach (var s in Skills)
+            {
+                tasks.Add(AreSkillsEqual(skill, s.Value));
+            }
+
+            var results = await Task.WhenAll(tasks).ConfigureAwait(true);
+            var contains = results.Any(res => res.Item1 == true);
+
+            if (contains)
+            {
+                var key = results.First(res => res.Item1 == true).Item2;
+                Skills.First(skill => skill.Value == key).Occurances++;
+            }
+            else
+            {
+                Skills.Add(new Skill() { Occurances = 1, });
+            }
+        }
+
+        private string[] GetSkills(string vacancyRequirements)
+        {
+            vacancyRequirements = vacancyRequirements.ToLower();
+            return vacancyRequirements.Split(delimeters, options: System.StringSplitOptions.TrimEntries);
         }
 
         private static int LevenshteinDistance(string string1, string string2)
         {
-            if (string1 == null) throw new ArgumentNullException(nameof(string1));
-            if (string2 == null) throw new ArgumentNullException(nameof(string2));
+            if (string1 == null) return 0;
+            if (string2 == null) return 0;
             int diff;
             int[,] m = new int[string1.Length + 1, string2.Length + 1];
 

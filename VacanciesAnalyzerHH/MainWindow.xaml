@@ -375,14 +375,12 @@
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Анализ навыков и требований">
-                    <ListView ItemsSource="{Binding Skills}">
+                    <ListView ItemsSource="{Binding SkillsAnalyzer.Skills}">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Key}"/>
-                                    <Expander Header="{Binding Value.Count}">
-                                        <ListView ItemsSource="{Binding Value}" ScrollViewer.CanContentScroll="True"/>
-                                    </Expander>
+                                    <TextBlock Text="{Binding Value}"/>
+                                    <TextBlock Text="{Binding Occurances}"/>
                                 </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>
