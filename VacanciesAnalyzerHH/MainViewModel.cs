@@ -110,18 +110,6 @@ namespace VacanciesAnalyzerHH
                     break;
                 }
             }
-
-            foreach (var vacancy in vacancies)
-            {
-                if (vacancy != null)
-                {
-                    await SkillsAnalyzer.AnalyzeSkills(vacancy);
-                }
-                else
-                {
-                    break;
-                }
-            }
         }
 
         private void OnPropertyChanged([CallerMemberName] string paramName = null)
