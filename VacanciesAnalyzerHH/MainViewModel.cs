@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
@@ -25,7 +26,6 @@ namespace VacanciesAnalyzerHH
         {
             currencyConverter = new CurrencyConverter();
             SkillsAnalyzer = new SkillsAnalyzer();
-            Vacancies = new ObservableCollection<Vacancy>();
             SalaryVisualizer = new SalaryVisualizer(currencyConverter);
             SearchEngine = new SearchEngine();
         }
@@ -131,7 +131,7 @@ namespace VacanciesAnalyzerHH
             TotalNumberOfSkills = 0;
             SalaryVisualizer.Clean();
             SkillsAnalyzer.Skills.Clear();
-            Vacancies.Clear();
+            Vacancies = null;
         }
 
         public void ConvertSalaries()
@@ -150,7 +150,8 @@ namespace VacanciesAnalyzerHH
         {
             Clear();
 
-            var vacancies = await SearchEngine.Search();
+            Vacancies = new ObservableCollection<Vacancy>();
+            await SearchEngine.Search();
 
             if (vacancies == null)
             {
