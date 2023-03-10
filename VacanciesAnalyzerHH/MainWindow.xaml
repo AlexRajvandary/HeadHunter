@@ -375,16 +375,29 @@
                     </StackPanel>
                 </TabItem>
                 <TabItem Header="Анализ навыков и требований">
-                    <ListView ItemsSource="{Binding SkillsAnalyzer.Skills}">
-                        <ListView.ItemTemplate>
-                            <DataTemplate>
-                                <StackPanel Orientation="Horizontal">
-                                    <TextBlock Text="{Binding Value}"/>
-                                    <TextBlock Text="{Binding Occurances}"/>
-                                </StackPanel>
-                            </DataTemplate>
-                        </ListView.ItemTemplate>
-                    </ListView>
+
+                    <StackPanel Orientation="Vertical">
+                        <Button Content="Анализировать навыки" Click="AnalyzeSkillsButtonClicked"/>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Всего навыков:"/>
+                            <TextBlock Text="{Binding TotalNumberOfSkills}" Margin="5,0,0,0"/>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Проанализировано:"/>
+                            <TextBlock Text="{Binding AnalyzedNumberOfSkills}"/>
+                        </StackPanel>
+                        <ListView ItemsSource="{Binding Skills}">
+                            <ListView.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{Binding Value}"/>
+                                        <TextBlock Text="{Binding Occurances}"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                        </ListView>
+                    </StackPanel>
+                    
                 </TabItem>
             </TabControl>
         </Grid>
