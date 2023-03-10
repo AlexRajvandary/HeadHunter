@@ -151,7 +151,7 @@ namespace VacanciesAnalyzerHH
             Clear();
 
             Vacancies = new ObservableCollection<Vacancy>();
-            await SearchEngine.Search();
+            var vacancies = await SearchEngine.Search();
 
             if (vacancies == null)
             {
