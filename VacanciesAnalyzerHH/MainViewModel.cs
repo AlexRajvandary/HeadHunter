@@ -7,7 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using System.Windows.Threading;
 using VacanciesAnalyzerHH.Models;
-using VacanciesAnalyzerHH.Support_services;
+using VacanciesAnalyzerHH.SupportServices;
 using static VacanciesAnalyzerHH.SkillsAnalyzer;
 
 namespace VacanciesAnalyzerHH
@@ -140,8 +140,8 @@ namespace VacanciesAnalyzerHH
             {
                 foreach (var vacancy in Vacancies)
                 {
-                    if (vacancy.salary == null) continue;
-                    vacancy.salary.ConvertTo(SelectedCurrency, currencyConverter);
+                    if (vacancy.Salary == null) continue;
+                    vacancy.Salary.ConvertTo(SelectedCurrency, currencyConverter);
                 }
             }
         }

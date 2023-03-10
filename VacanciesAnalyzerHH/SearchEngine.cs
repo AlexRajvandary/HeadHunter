@@ -75,8 +75,8 @@ namespace VacanciesAnalyzerHH
 
             var itemsPerPages = SearchFilter.ItemsPerPage;
             var hhResponse = await apiClient.GetVacancies(TextQuary, 0, itemsPerPages);
-            var totalNumberOfPages = hhResponse.pages ?? 0;
-            SearchResult.TotalNumberOfVacancies = hhResponse.found ?? 0;
+            var totalNumberOfPages = hhResponse.Pages ?? 0;
+            SearchResult.TotalNumberOfVacancies = hhResponse.Found ?? 0;
 
             if (totalNumberOfPages == 0)
             {
@@ -92,9 +92,9 @@ namespace VacanciesAnalyzerHH
                 tasks.Add(apiClient.GetVacancies(TextQuary, i, itemsPerPages));
             }
 
-            var pagesOfVacancies = (await Task.WhenAll(tasks))?.Select(hhResponse => hhResponse.items).ToList();
+            var pagesOfVacancies = (await Task.WhenAll(tasks))?.Select(hhResponse => hhResponse.Items).ToList();
 
-            foreach (var vacancy in hhResponse.items)
+            foreach (var vacancy in hhResponse.Items)
             {
                 result.Add(vacancy);
             }

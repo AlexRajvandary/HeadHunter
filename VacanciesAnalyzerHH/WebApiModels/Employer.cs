@@ -2,12 +2,12 @@
 {
     public class Employer
     {
-        public string id { get; set; }
-        public string name { get; set; }
-        public string url { get; set; }
-        public string alternate_url { get; set; }
-        public LogoUrls logo_urls { get; set; }
-        public string vacancies_url { get; set; }
-        public bool? trusted { get; set; }
+        public string? Id { get; set; }
+        public string? Name { get; set; }
+        public string? Url { get; set; }
+        public string? AlternateUrl { get; set; }
+        public LogoUrls? LogoUrls { get; set; }
+        public string? VacanciesUrl { get; set; }
+        public bool? Trusted { get; set; }
     }
 }

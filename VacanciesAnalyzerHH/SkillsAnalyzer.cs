@@ -35,12 +35,12 @@ namespace VacanciesAnalyzerHH
 
         public async Task AnalyzeSkills(Vacancy vacancy)
         {
-            if (string.IsNullOrWhiteSpace(vacancy?.snippet?.requirement))
+            if (string.IsNullOrWhiteSpace(vacancy?.Snippet?.Requirement))
             {
                 return;
             }
 
-            var vacancySkills = GetSkills(vacancy.snippet.requirement).ToList();
+            var vacancySkills = GetSkills(vacancy.Snippet.Requirement).ToList();
             
             foreach (var skill in vacancySkills)
             {

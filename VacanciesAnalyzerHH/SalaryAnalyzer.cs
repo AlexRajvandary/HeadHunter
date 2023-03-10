@@ -2,12 +2,13 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using VacanciesAnalyzerHH.Models;
-using VacanciesAnalyzerHH.Support_services;
+using VacanciesAnalyzerHH.SupportServices;
 using LiveCharts;
 using LiveCharts.Wpf;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System;
+
 
 namespace VacanciesAnalyzerHH
 {
@@ -78,19 +79,19 @@ namespace VacanciesAnalyzerHH
         public void VisualizeSalary(Vacancy vacancy)
         {
             if (vacancy == null) return;
-            if (vacancy.salary == null) return;
+            if (vacancy.Salary == null) return;
 
-            vacancy.salary.ConvertTo(Currency.RUR, currencyConverter);
-            var section = (int)(vacancy.salary.VisibleFrom / salaryStep);
+            vacancy.Salary.ConvertTo(Currency.RUR, currencyConverter);
+            var section = (int)(vacancy.Salary.VisibleFrom / salaryStep);
 
-            if (Min > vacancy.salary.VisibleFrom)
+            if (Min > vacancy.Salary.VisibleFrom)
             {
-                Min = vacancy.salary.VisibleFrom;
+                Min = vacancy.Salary.VisibleFrom;
             }
 
-            if (Max < vacancy.salary.VisibleTo)
+            if (Max < vacancy.Salary.VisibleTo)
             {
-                Max = vacancy.salary.VisibleTo;
+                Max = vacancy.Salary.VisibleTo;
             }
 
             if (SeriesCollection[0].Values.Count > section)

@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
@@ -6,6 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using VacanciesAnalyzerHH.Models;
+using VacanciesAnalyzerHH.SupportServices;
 
 namespace VacanciesAnalyzerHH
 {
@@ -47,7 +49,8 @@ namespace VacanciesAnalyzerHH
             {
                 var response = await httpClient.GetAsync(GetUrl("vacancies", param), cancellationTokenSource.Token);
                 var data = await response.Content.ReadAsStringAsync();
-                return JsonConvert.DeserializeObject<HHResponse>(data);
+
+                return JsonConvert.DeserializeObject<HHResponse>(data, new JsonSerializerSettings() { ContractResolver = new PascalCaseContractResolver()});
             }
             catch (OperationCanceledException)
             {

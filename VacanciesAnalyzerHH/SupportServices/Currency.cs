@@ -1,4 +1,5 @@
-﻿namespace VacanciesAnalyzerHH.Support_services
+﻿namespace VacanciesAnalyzerHH.SupportServices
+
 {
     public enum Currency
     {

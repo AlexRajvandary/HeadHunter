@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace VacanciesAnalyzerHH.Support_services
+namespace VacanciesAnalyzerHH.SupportServices
+
 {
     public class CurrencyConverter
     {

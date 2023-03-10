@@ -6,7 +6,7 @@
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:local="clr-namespace:VacanciesAnalyzerHH" d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:supSer="clr-namespace:VacanciesAnalyzerHH.Support_services"
+        xmlns:supSer="clr-namespace:VacanciesAnalyzerHH.SupportServices"
         xmlns:af="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
         Title="MainWindow" MinHeight="700" MinWidth="1200" Name="mainWindow">
@@ -144,9 +144,9 @@
                     Width="150" 
                     Height="14"
                     Margin="5"/>
-                    <TextBlock Text="{Binding SearchEngine.NumOfLoadedVacancies}" Margin="5"/>
+                    <TextBlock Text="{Binding SearchEngine.SearchResult.NumOfLoadedVacancies}" Margin="5"/>
                     <TextBlock Text="/" Margin="5"/>
-                    <TextBlock Text="{Binding SearchEngine.TotalNumberOfVacancies}" Margin="5"/>
+                    <TextBlock Text="{Binding SearchEngine.SearchResult.TotalNumberOfVacancies}" Margin="5"/>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" Visibility="{Binding SkillsAnalyzer.IsActive, Converter={StaticResource boolToVis}}">
                     <TextBlock Text="Анализ строк" Margin="5"/>
@@ -204,7 +204,7 @@
                                 </DataGridTemplateColumn.HeaderTemplate>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding name}" TextWrapping="WrapWithOverflow"/>
+                                        <TextBlock Text="{Binding Name}" TextWrapping="WrapWithOverflow"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -220,7 +220,7 @@
                                 </DataGridTemplateColumn.HeaderTemplate>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding employer.name}" TextWrapping="WrapWithOverflow"/>
+                                        <TextBlock Text="{Binding Employer.Name}" TextWrapping="WrapWithOverflow"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -242,7 +242,7 @@
                                 </DataGridTemplateColumn.HeaderTemplate>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding salary.VisibleString}" TextWrapping="WrapWithOverflow"/>
+                                        <TextBlock Text="{Binding Salary.VisibleString}" TextWrapping="WrapWithOverflow"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -258,7 +258,7 @@
                                 </DataGridTemplateColumn.HeaderTemplate>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding address}" TextWrapping="WrapWithOverflow"/>
+                                        <TextBlock Text="{Binding Address}" TextWrapping="WrapWithOverflow"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -274,7 +274,7 @@
                                 </DataGridTemplateColumn.HeaderTemplate>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding published_at}" TextWrapping="WrapWithOverflow"/>
+                                        <TextBlock Text="{Binding PublishedAt}" TextWrapping="WrapWithOverflow"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -290,7 +290,7 @@
                                 </DataGridTemplateColumn.HeaderTemplate>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding schedule.name}" TextWrapping="WrapWithOverflow"/>
+                                        <TextBlock Text="{Binding Schedule.Name}" TextWrapping="WrapWithOverflow"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -306,7 +306,7 @@
                                 </DataGridTemplateColumn.HeaderTemplate>
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <TextBlock Text="{Binding contacts}" TextWrapping="WrapWithOverflow"/>
+                                        <TextBlock Text="{Binding Contacts}" TextWrapping="WrapWithOverflow"/>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>
                             </DataGridTemplateColumn>
@@ -363,22 +363,22 @@
 
                     <StackPanel Orientation="Vertical" Width="{Binding ElementName=mainWindow, Path=ActualWidth}">
 
-                        <TextBlock Text="{Binding SelectedVacancy.name}" Margin="2,0,5,0" Padding="10,2"/>
-                        <TextBlock Text="{Binding SelectedVacancy.employer.name}" Margin="2,0,5,0" Padding="10,2"/>
+                        <TextBlock Text="{Binding SelectedVacancy.Name}" Margin="2,0,5,0" Padding="10,2"/>
+                        <TextBlock Text="{Binding SelectedVacancy.Employer.name}" Margin="2,0,5,0" Padding="10,2"/>
 
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding SelectedVacancy.salary.From}" Margin="2,0,5,0" Padding="10,2"/>
-                            <TextBlock Text="{Binding SelectedVacancy.salary.To}" Margin="2,0,5,0" Padding="10,2"/>
-                            <TextBlock Text="{Binding SelectedVacancy.salary.Currency}" Margin="2,0,5,0" Padding="10,2"/>
+                            <TextBlock Text="{Binding SelectedVacancy.Salary.From}" Margin="2,0,5,0" Padding="10,2"/>
+                            <TextBlock Text="{Binding SelectedVacancy.Salary.To}" Margin="2,0,5,0" Padding="10,2"/>
+                            <TextBlock Text="{Binding SelectedVacancy.Salary.Currency}" Margin="2,0,5,0" Padding="10,2"/>
                         </StackPanel>
 
                         <TextBlock Text="Требования:" Margin="2,0,5,0" Padding="10,2"/>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding SelectedVacancy.snippet.requirement}" Margin="2,0,5,0" Padding="10,2"/>
+                            <TextBlock Text="{Binding SelectedVacancy.Snippet.requirement}" Margin="2,0,5,0" Padding="10,2"/>
                         </StackPanel>
                         <TextBlock Text="Обязанности:" Margin="2,0,5,0" Padding="10,2"/>
                         <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="{Binding SelectedVacancy.snippet.responsibility}" Margin="2,0,5,0" Padding="10,2"/>
+                            <TextBlock Text="{Binding SelectedVacancy.Snippet.responsibility}" Margin="2,0,5,0" Padding="10,2"/>
                         </StackPanel>
                     </StackPanel>
                 </TabItem>
