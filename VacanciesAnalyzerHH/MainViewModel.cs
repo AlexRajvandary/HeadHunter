@@ -1,32 +1,46 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
+using System.Windows.Threading;
 using VacanciesAnalyzerHH.Models;
-using VacanciesAnalyzerHH.Support_services;
+using VacanciesAnalyzerHH.SupportServices;
+using static VacanciesAnalyzerHH.SkillsAnalyzer;
 
 namespace VacanciesAnalyzerHH
 {
     public class MainViewModel : INotifyPropertyChanged
     {
         private readonly CurrencyConverter currencyConverter;
-
+        private int analyzedNumberOfSkills;
         private Currency selectedCurrency;
         private Vacancy selectedVacancy;
-        private IEnumerable<KeyValuePair<string, List<string>>> skills;
+        private ObservableCollection<Skill> skills;
         private ObservableCollection<Vacancy> vacancies;
+        private int totalNumberOfSkills;
 
         public MainViewModel()
         {
             currencyConverter = new CurrencyConverter();
             SkillsAnalyzer = new SkillsAnalyzer();
-            Vacancies = new ObservableCollection<Vacancy>();
             SalaryVisualizer = new SalaryVisualizer(currencyConverter);
             SearchEngine = new SearchEngine();
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        public int AnalyzedNumberOfSkills
+        {
+            get => analyzedNumberOfSkills;
+            set
+            {
+                analyzedNumberOfSkills = value;
+                OnPropertyChanged();
+            }
+        }
 
         public SalaryVisualizer SalaryVisualizer { get; }
 
@@ -55,7 +69,27 @@ namespace VacanciesAnalyzerHH
             }
         }
 
+        public ObservableCollection<Skill> Skills
+        {
+            get => skills;
+            set
+            {
+                skills = value;
+                OnPropertyChanged();
+            }
+        } 
+
         public SkillsAnalyzer SkillsAnalyzer { get; private set; }
+
+        public int TotalNumberOfSkills
+        {
+            get => totalNumberOfSkills;
+            set
+            {
+                totalNumberOfSkills = value;
+                OnPropertyChanged();
+            }
+        }
 
         public ObservableCollection<Vacancy> Vacancies
         {
@@ -67,10 +101,37 @@ namespace VacanciesAnalyzerHH
             }
         }
 
+        public async Task AnalyzeSkills()
+        {
+            SkillsAnalyzer.IsActive = true;
+
+            await Task.Run(async () =>
+            {
+                foreach (var vacancy in vacancies)
+                {
+                    await SkillsAnalyzer.AnalyzeSkills(vacancy);
+                }
+            });
+
+            Skills = new ObservableCollection<Skill>(SkillsAnalyzer.Skills);
+            TotalNumberOfSkills = Skills.Sum(sk => sk.Occurances);
+            AnalyzedNumberOfSkills = Skills.Count;
+            SkillsAnalyzer.IsActive = false;
+        }
+
         public void Cancel()
         {
             SearchEngine?.Cancel();
             SkillsAnalyzer?.Cancel();
+        }
+
+        public void Clear()
+        {
+            AnalyzedNumberOfSkills = 0;
+            TotalNumberOfSkills = 0;
+            SalaryVisualizer.Clean();
+            SkillsAnalyzer.Skills.Clear();
+            Vacancies = null;
         }
 
         public void ConvertSalaries()
@@ -79,18 +140,17 @@ namespace VacanciesAnalyzerHH
             {
                 foreach (var vacancy in Vacancies)
                 {
-                    if (vacancy.salary == null) continue;
-                    vacancy.salary.ConvertTo(SelectedCurrency, currencyConverter);
+                    if (vacancy.Salary == null) continue;
+                    vacancy.Salary.ConvertTo(SelectedCurrency, currencyConverter);
                 }
             }
         }
 
         public async Task Search()
         {
-            SalaryVisualizer.Clean();
-            SkillsAnalyzer.Skills.Clear();
-            Vacancies.Clear();
+            Clear();
 
+            Vacancies = new ObservableCollection<Vacancy>();
             var vacancies = await SearchEngine.Search();
 
             if (vacancies == null)

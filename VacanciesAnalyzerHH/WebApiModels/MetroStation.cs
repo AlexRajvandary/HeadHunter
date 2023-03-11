@@ -2,11 +2,11 @@
 {
     public class MetroStation
     {
-        public string station_name { get; set; }
-        public string line_name { get; set; }
-        public string station_id { get; set; }
-        public string line_id { get; set; }
-        public double? lat { get; set; }
-        public double? lng { get; set; }
+        public string? StationName { get; set; }
+        public string? LineName { get; set; }
+        public string? Original { get; set; }
+        public string? LineId { get; set; }
+        public double? Lat { get; set; }
+        public double? Lng { get; set; }
     }
 }

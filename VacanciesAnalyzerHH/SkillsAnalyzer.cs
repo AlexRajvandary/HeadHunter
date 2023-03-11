@@ -31,21 +31,29 @@ namespace VacanciesAnalyzerHH
             }
         }
 
-        public ObservableCollection<Skill> Skills { get; set; } = new ObservableCollection<Skill>();
+        public List<Skill> Skills { get; set; } = new List<Skill>();
 
         public async Task AnalyzeSkills(Vacancy vacancy)
         {
-            if (string.IsNullOrWhiteSpace(vacancy?.snippet?.requirement))
+            if (string.IsNullOrWhiteSpace(vacancy?.Snippet?.Requirement))
             {
                 return;
             }
 
-            var vacancySkills = GetSkills(vacancy.snippet.requirement).ToList();
-            vacancySkills.RemoveAll(st => st == string.Empty);
-
+            var vacancySkills = GetSkills(vacancy.Snippet.Requirement).ToList();
+            
             foreach (var skill in vacancySkills)
             {
-                await CompareSkills(skill).ConfigureAwait(true);
+                var resOfComparing = await CompareSkills(skill);
+
+                if(resOfComparing.Item1)
+                {
+                    Skills.Add(new Skill() { Value = skill, Occurances = 1});
+                }
+                else
+                {
+                    Skills.First(s => s.Value == resOfComparing.Item2).Occurances++;
+                }
             }
         }
 
@@ -60,48 +68,41 @@ namespace VacanciesAnalyzerHH
             cancellationTokenSource = null;
         }
 
-        private async Task<(bool, string)> AreSkillsEqual(string skill, string key)
+        private (bool, string, string) AreSkillsEqual(string skill, string key)
         {
-            return await Task.Run(() =>
-            {
-                var isEqual = (LevenshteinDistance(skill, key) < 5 || (skill.Length >= key.Length ? skill.Contains(key) : key.Contains(skill))) && skill.Length <= 5 && !(skill?.Length >= key?.Length ? skill?.Contains(key) ?? false : key?.Contains(skill) ?? false);
-                return (isEqual, key);
-            }).ConfigureAwait(true);
+            var isEqual = skill.Length > key.Length ? skill.Contains(key) : key.Contains(skill);
+            return (isEqual, skill, key);
         }
 
-        private async Task CompareSkills(string skill)
+        private async Task<(bool, string)> CompareSkills(string skillToCampare)
         {
-            var tasks = new List<Task<(bool, string)>>();
+            var tasks = new List<Task<(bool, string, string)>>();
 
             if (Skills.Count == 0)
             {
-                Skills.Add(new Skill() { Value = skill, Occurances = 1 });
-                return;
+                return (true, string.Empty);
             }
 
-            foreach (var s in Skills)
+            foreach (var skill in Skills)
             {
-                tasks.Add(AreSkillsEqual(skill, s.Value));
+                tasks.Add(Task.Run(() => AreSkillsEqual(skillToCampare, skill.Value)));
             }
 
-            var results = await Task.WhenAll(tasks).ConfigureAwait(true);
-            var contains = results.Any(res => res.Item1 == true);
+            var results = await Task.WhenAll(tasks);
+            var isSkillNew = !results.Any(res => res.Item1 == true);
+            var key = "";
 
-            if (contains)
+            if (!isSkillNew)
             {
-                var key = results.First(res => res.Item1 == true).Item2;
-                Skills.First(skill => skill.Value == key).Occurances++;
+                key = results.First(res => res.Item1 == true).Item3;
             }
-            else
-            {
-                Skills.Add(new Skill() { Occurances = 1, });
-            }
+            return (isSkillNew, key);
         }
 
-        private string[] GetSkills(string vacancyRequirements)
+        private IEnumerable<string> GetSkills(string vacancyRequirements)
         {
             vacancyRequirements = vacancyRequirements.ToLower();
-            return vacancyRequirements.Split(delimeters, options: System.StringSplitOptions.TrimEntries);
+            return vacancyRequirements.Split(delimeters, StringSplitOptions.RemoveEmptyEntries).ToList().Where(str => !string.IsNullOrWhiteSpace(str));
         }
 
         private static int LevenshteinDistance(string string1, string string2)

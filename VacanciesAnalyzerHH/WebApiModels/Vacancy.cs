@@ -5,36 +5,36 @@ namespace VacanciesAnalyzerHH.Models
 {
     public class Vacancy
     {
-        public string? id { get; set; }
-        public bool? premium { get; set; }
-        public string? name { get; set; }
-        public object? department { get; set; }
-        public bool? has_test { get; set; }
-        public bool? response_letter_required { get; set; }
-        public Area area { get; set; }
-        public Salary salary { get; set; }
-        public Type type { get; set; }
-        public Address address { get; set; }
-        public object? response_url { get; set; }
-        public object? sort_point_distance { get; set; }
-        public DateTime? published_at { get; set; }
-        public DateTime? created_at { get; set; }
-        public bool? archived { get; set; }
-        public string? apply_alternate_url { get; set; }
-        public object? insider_interview { get; set; }
-        public string? url { get; set; }
-        public object? adv_response_url { get; set; }
-        public string? alternate_url { get; set; }
-        public List<object> relations { get; set; }
-        public Employer employer { get; set; }
-        public Snippet snippet { get; set; }
-        public object? contacts { get; set; }
-        public Schedule schedule { get; set; }
-        public List<object> working_days { get; set; }
-        public List<object> working_time_intervals { get; set; }
-        public List<object> working_time_modes { get; set; }
-        public bool? accept_temporary { get; set; }
-        public List<ProfessionalRole> professional_roles { get; set; }
-        public bool? accept_incomplete_resumes { get; set; }
+        public string? Id { get; set; }
+        public bool? Premium { get; set; }
+        public string? Name { get; set; }
+        public object? Department { get; set; }
+        public bool? HasTest { get; set; }
+        public bool? ResponseLetterRequired { get; set; }
+        public Area? Area { get; set; }
+        public Salary? Salary { get; set; }
+        public Type? Type { get; set; }
+        public Address? Address { get; set; }
+        public object? ResponseUrl { get; set; }
+        public object? SortPointDistance { get; set; }
+        public DateTime? PublishedAt { get; set; }
+        public DateTime? CreatedAt { get; set; }
+        public bool? Archived { get; set; }
+        public string? ApplyAlternateUrl { get; set; }
+        public object? InsiderInterview { get; set; }
+        public string? Url { get; set; }
+        public object? AdvResponseUrl { get; set; }
+        public string? AlternateUrl { get; set; }
+        public List<object>? Relations { get; set; }
+        public Employer? Employer { get; set; }
+        public Snippet? Snippet { get; set; }
+        public object? Contacts { get; set; }
+        public Schedule? Schedule { get; set; }
+        public List<object>? WorkingDays { get; set; }
+        public List<object>? WorkingTimeIntervals { get; set; }
+        public List<object>? WorkingTimeModes { get; set; }
+        public bool? AcceptTemporary { get; set; }
+        public List<ProfessionalRole>? ProfessionalRoles { get; set; }
+        public bool? AcceptIncompleteResumes { get; set; }
     }
 }

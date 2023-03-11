@@ -4,7 +4,7 @@ namespace VacanciesAnalyzerHH.Models
 {
     public class LogoUrls
     {
-        public string original { get; set; }
+        public string? Original { get; set; }
 
         [JsonProperty("90")]
         public string _90 { get; set; }
