@@ -4,7 +4,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using VacanciesAnalyzerHH.Models;
-using VacanciesAnalyzerHH.Support_services;
+using VacanciesAnalyzerHH.SupportServices;
 
 namespace VacanciesAnalyzerHH
 {

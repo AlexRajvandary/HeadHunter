@@ -6,10 +6,10 @@
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:local="clr-namespace:VacanciesAnalyzerHH" d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:supSer="clr-namespace:VacanciesAnalyzerHH.Support_services"
+        xmlns:supSer="clr-namespace:VacanciesAnalyzerHH.SupportServices"
         xmlns:af="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
-        Title="MainWindow" MinHeight="700" MinWidth="1200" Name="mainWindow"
+        Title="MainWindow" MinHeight="800" MinWidth="1200" Name="mainWindow"
         >
     <Window.Resources>
         <ObjectDataProvider x:Key="EnumDataSource"
@@ -22,13 +22,15 @@
         <CollectionViewSource x:Name="VacanciesCollectionViewSource" x:Key="VacanciesCollectionViewSource" Source="{Binding Vacancies}"/>
         <BooleanToVisibilityConverter x:Key="boolToVis"/>
     </Window.Resources>
-    <Grid>
+    <Grid Background="White">
         <Grid.RowDefinitions>
-            <RowDefinition Height="88"/>
-            <RowDefinition/>
+            <RowDefinition Height="70"/>
+            <RowDefinition />
+            <RowDefinition Height="35"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Vertical" Grid.Row="0" Style="{StaticResource FooterBackgroundColor}">
+        <StackPanel Orientation="Vertical" Grid.Row="0" Style="{StaticResource FooterBackgroundColor}" Background="#FF7080CE">
+          
             <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="20,20,0,0">
                 <TextBlock Text="Поиск" Style="{StaticResource CommonTitle}"/>
                 <TextBox Text="{Binding SearchEngine.TextQuary}" Height="25" Style="{StaticResource SearchTextBox}"/>
@@ -104,45 +106,72 @@
                     </StackPanel>
                 </ToggleButton>
             </StackPanel>
-            <StackPanel Orientation="Horizontal" Margin="20,0,0,0"  Visibility="{Binding SearchEngine.IsSearchInProcess, Converter={StaticResource boolToVis}}">
-                <TextBlock Text="Загрузка" Style="{StaticResource CommonTitle}"/>
-                <ProgressBar 
-                    IsIndeterminate="True"
-                    Foreground="Green" 
-                    Background="LightGreen"
-                    Width="100" 
-                    Height="20"
-                    Margin="5"/>
-            </StackPanel>
-            <StackPanel Orientation="Horizontal"  Margin="20,0,0,0" Visibility="{Binding SkillsAnalyzer.IsActive, Converter={StaticResource boolToVis}}">
-                <TextBlock Text="Анализ строк" Style="{StaticResource CommonTitle}"/>
-                <ProgressBar 
-                    IsIndeterminate="True"
-                    Background="Blue"
-                    Foreground="CadetBlue" 
-                    Width="100" 
-                    Height="20"
-                    Margin="5"/>
-            </StackPanel>
             <StackPanel Orientation="Horizontal"  Margin="20,0,0,10" Visibility="{Binding SearchEngine.IsSearchCompleted, Converter={StaticResource boolToVis}}">
                 <TextBlock Text="Найдено:" Style="{StaticResource CommonTitle}"/>
                 <TextBlock Text="{Binding SearchEngine.TotalNumberOfVacancies}" Style="{StaticResource CommonTitle}"/>
             </StackPanel>
         </StackPanel>
 
-        <TabControl Margin="10" Grid.Row="1">
+        <TabControl Margin="10" Grid.Row="1" Height="700">
             <TabItem Header="Все вакансии" Style="{StaticResource CommonTextTabItem}">
-                <DataGrid Grid.Row="0" 
+                <DataGrid 
                           ItemsSource="{Binding Source={StaticResource VacanciesCollectionViewSource}}" 
                           SelectedItem="{Binding SelectedVacancy}" 
-                          Height="600" 
                           Width="auto"
+                          HorizontalGridLinesBrush="Transparent"
+                          VerticalGridLinesBrush="Transparent"
                           AutoGenerateColumns="False" 
                           Grid.ColumnSpan="2" 
                           CanUserAddRows="False"
                           CanUserDeleteRows="False"
-                          IsReadOnly="True">
+                          IsReadOnly="True"
+                          HeadersVisibility="Row"
+                          SelectionMode="Single"  
+                          >
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Margin" Value="0,0,5,5"/>
+                            <Setter Property="Opacity" Value="0.7"/>
+                            <Style.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="15"/>
+                                    <Setter Property="Effect">
+                                        <Setter.Value>
+                                            <DropShadowEffect ShadowDepth="0" Opacity="0.8"/>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </Style.Resources>
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected"
+                                         Value="True">
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="Background" Value="White"/>
+                                    <Setter Property="Opacity" Value="1"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                        
+                        
+                    </DataGrid.RowStyle>
+                    <DataGrid.Resources>
+                        <Style TargetType="DataGridCell">
+                            <Style.Triggers>
+                                <Trigger Property="IsSelected"  Value="True">
+                                    <Setter Property="Background" Value="White"/>
+                                    <Setter Property="Foreground" Value="Black"/>
+                                    <Setter Property="BorderBrush" Value="Transparent"/>
+                                    <Setter Property="Opacity" Value="1"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.Resources>
+                   
+                    
+                    
+                    
                     <DataGrid.Columns>
+                        
                         <DataGridTemplateColumn Width="150">
                             <DataGridTemplateColumn.HeaderTemplate>
                                 <DataTemplate>
@@ -357,5 +386,28 @@
                 </ListView>
             </TabItem>
         </TabControl>
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Height="30">
+            <StackPanel Orientation="Horizontal" Margin="20,0,0,0"  Visibility="{Binding SearchEngine.IsSearchInProcess, Converter={StaticResource boolToVis}}">
+                <TextBlock Text="Загрузка" Style="{StaticResource CommonTitle}"/>
+                <ProgressBar 
+                    IsIndeterminate="True"
+                    Foreground="Green" 
+                    Background="LightGreen"
+                    Width="100" 
+                    Height="20"
+                    Margin="5"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal"  Margin="20,0,0,0" Visibility="{Binding SkillsAnalyzer.IsActive, Converter={StaticResource boolToVis}}">
+                <TextBlock Text="Анализ строк" Style="{StaticResource CommonTitle}"/>
+                <ProgressBar 
+                    IsIndeterminate="True"
+                    Background="Blue"
+                    Foreground="CadetBlue" 
+                    Width="100" 
+                    Height="20"
+                    Margin="5"/>
+            </StackPanel>
+        </StackPanel>
     </Grid>
 </Window>

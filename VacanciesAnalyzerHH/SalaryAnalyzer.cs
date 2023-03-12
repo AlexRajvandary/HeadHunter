@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using VacanciesAnalyzerHH.Models;
-using VacanciesAnalyzerHH.Support_services;
+using VacanciesAnalyzerHH.SupportServices;
 using LiveCharts;
 using LiveCharts.Wpf;
 using System.Collections.ObjectModel;

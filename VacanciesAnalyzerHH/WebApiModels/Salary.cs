@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using VacanciesAnalyzerHH.Support_services;
+using VacanciesAnalyzerHH.SupportServices;
 
 namespace VacanciesAnalyzerHH.Models
 {
