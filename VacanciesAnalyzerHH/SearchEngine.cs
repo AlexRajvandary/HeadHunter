@@ -16,6 +16,7 @@ namespace VacanciesAnalyzerHH
         private int numOfLoadedVacancies;
         private string textQuary;
         private int totalNumberOfVacancies;
+        private bool isSearchCompleted;
 
         public SearchEngine()
         {
@@ -24,6 +25,19 @@ namespace VacanciesAnalyzerHH
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;
+
+        public bool IsSearchCompleted
+        {
+            get => isSearchCompleted;
+            set
+            {
+                if (isSearchCompleted != value)
+                {
+                    isSearchCompleted = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
 
         public bool IsSearchInProcess
         {
@@ -88,6 +102,7 @@ namespace VacanciesAnalyzerHH
         {
             TotalNumberOfVacancies = 0;
             NumOfLoadedVacancies = 0;
+            IsSearchCompleted = false;
             IsSearchInProcess = true;
 
             var itemsPerPages = SearchFilter.ItemsPerPage;
@@ -137,6 +152,7 @@ namespace VacanciesAnalyzerHH
             }
 
             IsSearchInProcess = false;
+            IsSearchCompleted = true;
             return result;
         }
 

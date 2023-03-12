@@ -4,6 +4,74 @@
              xmlns:local="clr-namespace:VacanciesAnalyzerHH"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary>
+            <Style TargetType="TextBlock" x:Key="CommonTitle">
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="FontFamily" Value="Callibri"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+                <Setter Property="Margin" Value="5"/>
+            </Style>
+            
+            <Style TargetType="TextBox" x:Key="CommonText">
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="FontFamily" Value="Callibri"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+            
+            <Style TargetType="Button" x:Key="CommonTextButton">
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="FontFamily" Value="Callibri"/>
+                <Setter Property="VerticalAlignment" Value="Center"/>
+            </Style>
+
+            <Style x:Key="FooterButtonStyle" TargetType="Button">
+                <Setter Property="Background" Value="#ffffff"/>
+                <Setter Property="BorderBrush" Value="White"/>
+                <Style.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="4"/>
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect ShadowDepth="5" Opacity="0.2"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Style.Resources>
+            </Style>
+
+            <Style x:Key="SearchTextBox" TargetType="TextBox">
+                <Setter Property="Background" Value="#ffffff"/>
+                <Setter Property="BorderBrush" Value="White"/>
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="FontFamily" Value="Callibri"/>
+                <Setter Property="Padding" Value="5,2,0,0"/>
+                <Setter Property="Width" Value="200"/>
+                <Setter Property="MaxWidth" Value="200"/>
+                <Setter Property="Height" Value="25"/>
+                <Style.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="7"/>
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect ShadowDepth="0" Opacity="0.8"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Style.Resources>
+            </Style>
+
+            <Style TargetType="TabItem" x:Key="CommonTextTabItem">
+                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="FontFamily" Value="Callibri"/>
+                <Setter Property="VerticalAlignment" Value="Bottom"/>
+                <Setter Property="Height" Value="24"/>
+            </Style>
+
+            <Style x:Key="FooterBackgroundColor" TargetType="StackPanel">
+                <Setter Property="Background" Value="#6abdb2"/>
+             
+            </Style>
+
+        </ResourceDictionary>
     </Application.Resources>
 </Application>
