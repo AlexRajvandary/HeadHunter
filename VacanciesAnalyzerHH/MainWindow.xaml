@@ -30,11 +30,11 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Vertical" Grid.Row="0" Style="{StaticResource FooterBackgroundColor}" Background="#FF7080CE">
-          
+
             <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="20,20,0,0">
-                <TextBlock Text="Поиск" Style="{StaticResource CommonTitle}"/>
+                <TextBlock Text="Поиск"  Style="{StaticResource CommonTitle}" Margin="0,0,10,0"/>
                 <TextBox Text="{Binding SearchEngine.TextQuary}" Height="25" Style="{StaticResource SearchTextBox}"/>
-                <Button Click="OnSearchButtonClicked" DockPanel.Dock="Right" Width="25" Height="25" Background="Transparent" BorderBrush="Transparent">
+                <Button Click="OnSearchButtonClicked" DockPanel.Dock="Right" Width="25" Height="25" Background="Transparent" BorderBrush="Transparent" Margin="5,0,0,0">
                     <Button.Content>
                         <af:FontAwesome Icon="Search" FontSize="16"/>
                     </Button.Content>
@@ -84,7 +84,7 @@
                     </StackPanel>
                 </ToggleButton>
 
-                <ToggleButton x:Name="TogglePopupButton2" Width="25" Height="25" Margin="5,0,0,0" HorizontalAlignment="Left" Background="Transparent" BorderBrush="Transparent">
+                <ToggleButton x:Name="TogglePopupButton2" Width="25" Height="25" HorizontalAlignment="Left" Background="Transparent" BorderBrush="Transparent">
                     <StackPanel>
                         <ContentControl>
                             <ContentControl.Content>
@@ -106,14 +106,12 @@
                     </StackPanel>
                 </ToggleButton>
             </StackPanel>
-            <StackPanel Orientation="Horizontal"  Margin="20,0,0,10" Visibility="{Binding SearchEngine.IsSearchCompleted, Converter={StaticResource boolToVis}}">
-                <TextBlock Text="Найдено:" Style="{StaticResource CommonTitle}"/>
-                <TextBlock Text="{Binding SearchEngine.TotalNumberOfVacancies}" Style="{StaticResource CommonTitle}"/>
-            </StackPanel>
         </StackPanel>
 
         <TabControl Margin="10" Grid.Row="1" Height="700">
+          
             <TabItem Header="Все вакансии" Style="{StaticResource CommonTextTabItem}">
+                
                 <DataGrid 
                           ItemsSource="{Binding Source={StaticResource VacanciesCollectionViewSource}}" 
                           SelectedItem="{Binding SelectedVacancy}" 
@@ -125,13 +123,13 @@
                           CanUserAddRows="False"
                           CanUserDeleteRows="False"
                           IsReadOnly="True"
-                          HeadersVisibility="Row"
+                          HeadersVisibility="Column"
                           SelectionMode="Single"  
                           >
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
                             <Setter Property="Margin" Value="0,0,5,5"/>
-                            <Setter Property="Opacity" Value="0.7"/>
+                            <Setter Property="Opacity" Value="0.8"/>
                             <Style.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="15"/>
@@ -373,7 +371,7 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Анализ навыков и требований">
+            <TabItem Header="Анализ навыков и требований" Height="26" Margin="-2,-2,-2,0" VerticalAlignment="Top">
                 <ListView ItemsSource="{Binding SkillsAnalyzer.Skills}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
@@ -407,6 +405,11 @@
                     Width="100" 
                     Height="20"
                     Margin="5"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal"  Margin="20,0,0,0" Visibility="{Binding SearchEngine.IsSearchCompleted, Converter={StaticResource boolToVis}}">
+                <TextBlock Text="Найдено:" Style="{StaticResource CommonTitle}"/>
+                <TextBlock Text="{Binding SearchEngine.TotalNumberOfVacancies}" Style="{StaticResource CommonTitle}"/>
             </StackPanel>
         </StackPanel>
     </Grid>

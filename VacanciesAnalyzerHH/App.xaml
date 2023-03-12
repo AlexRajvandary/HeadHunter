@@ -11,13 +11,13 @@
                 <Setter Property="VerticalAlignment" Value="Center"/>
                 <Setter Property="Margin" Value="5"/>
             </Style>
-            
+
             <Style TargetType="TextBox" x:Key="CommonText">
                 <Setter Property="FontSize" Value="15"/>
                 <Setter Property="FontFamily" Value="Callibri"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
             </Style>
-            
+
             <Style TargetType="Button" x:Key="CommonTextButton">
                 <Setter Property="FontSize" Value="15"/>
                 <Setter Property="FontFamily" Value="Callibri"/>
