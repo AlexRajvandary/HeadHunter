@@ -1,2 +1,2 @@
 # HeadHunter
-![img](Sources/HH.gif)
+![img](HH.gif)
