@@ -161,7 +161,7 @@
                                 
                                 <TabPanel Grid.Row="0" 
                                           IsItemsHost="True"
-                                          Background="#0460D9"/>
+                                          Background="Transparent"/>
 
                                 <Border Grid.Row="1"
                                         CornerRadius="5"
