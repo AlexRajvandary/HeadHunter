@@ -140,7 +140,6 @@
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
                             <Setter Property="Margin" Value="5"/>
-                          
                             <Style.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="15"/>
