@@ -83,5 +83,17 @@ namespace VacanciesAnalyzerHH
         {
             MainViewModel?.Cancel();
         }
+
+        private async void AnalyzeSkillsButtonClicked(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                await MainViewModel?.AnalyzeSkills();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
     }
 }

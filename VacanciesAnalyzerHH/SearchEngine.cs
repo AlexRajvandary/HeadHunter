@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-using System.Windows.Documents;
 using VacanciesAnalyzerHH.Models;
 
 namespace VacanciesAnalyzerHH
@@ -13,9 +11,9 @@ namespace VacanciesAnalyzerHH
     {
         private readonly ApiClient apiClient;
         private bool isSearchInProgress;
-        private int numOfLoadedVacancies;
         private string textQuary;
-        private int totalNumberOfVacancies;
+        private SearchResult searchResult;
+      
         private bool isSearchCompleted;
 
         public SearchEngine()
@@ -52,20 +50,20 @@ namespace VacanciesAnalyzerHH
             }
         }
 
-        public int NumOfLoadedVacancies
+        public SearchFilter SearchFilter { get; }
+
+        public SearchResult SearchResult
         {
-            get => numOfLoadedVacancies;
+            get => searchResult;
             set
             {
-                if (numOfLoadedVacancies != value)
+                if(searchResult != value)
                 {
-                    numOfLoadedVacancies = value;
+                    searchResult = value;
                     OnPropertyChanged();
                 }
             }
         }
-
-        public SearchFilter SearchFilter { get; }
 
         public string TextQuary
         {
@@ -80,35 +78,21 @@ namespace VacanciesAnalyzerHH
             }
         }
 
-        public int TotalNumberOfVacancies
-        {
-            get => totalNumberOfVacancies;
-            set
-            {
-                if (totalNumberOfVacancies != value)
-                {
-                    totalNumberOfVacancies = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
         public void Cancel()
         {
             apiClient?.Cancel();
         }
 
         public async Task<List<Vacancy>> Search()
-        {
-            TotalNumberOfVacancies = 0;
-            NumOfLoadedVacancies = 0;
+        { 
             IsSearchCompleted = false;
             IsSearchInProcess = true;
+            SearchResult = new SearchResult();
 
             var itemsPerPages = SearchFilter.ItemsPerPage;
             var hhResponse = await apiClient.GetVacancies(TextQuary, 0, itemsPerPages);
-            var totalNumberOfPages = hhResponse.pages ?? 0;
-            TotalNumberOfVacancies = hhResponse.found ?? 0;
+            var totalNumberOfPages = hhResponse.Pages ?? 0;
+            SearchResult.TotalNumberOfVacancies = hhResponse.Found ?? 0;
 
             if (totalNumberOfPages == 0)
             {
@@ -124,9 +108,9 @@ namespace VacanciesAnalyzerHH
                 tasks.Add(apiClient.GetVacancies(TextQuary, i, itemsPerPages));
             }
 
-            var pagesOfVacancies = (await Task.WhenAll(tasks))?.Select(hhResponse => hhResponse.items).ToList();
+            var pagesOfVacancies = (await Task.WhenAll(tasks))?.Select(hhResponse => hhResponse.Items).ToList();
 
-            foreach (var vacancy in hhResponse.items)
+            foreach (var vacancy in hhResponse.Items)
             {
                 result.Add(vacancy);
             }
@@ -151,6 +135,7 @@ namespace VacanciesAnalyzerHH
                 }
             }
 
+            SearchResult.Vacancies = result;
             IsSearchInProcess = false;
             IsSearchCompleted = true;
             return result;

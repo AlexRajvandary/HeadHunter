@@ -4,20 +4,20 @@ namespace VacanciesAnalyzerHH.Models
 {
     public class Address
     {
-        public string city { get; set; }
-        public string street { get; set; }
-        public string building { get; set; }
-        public double? lat { get; set; }
-        public double? lng { get; set; }
-        public object description { get; set; }
-        public string raw { get; set; }
-        public Metro metro { get; set; }
-        public List<MetroStation> metro_stations { get; set; }
-        public string id { get; set; }
+        public string? City { get; set; }
+        public string? Street { get; set; }
+        public string? Building { get; set; }
+        public double? Lat { get; set; }
+        public double? Lng { get; set; }
+        public object? Description { get; set; }
+        public string? Raw { get; set; }
+        public Metro? Metro { get; set; }
+        public List<MetroStation>? MetroStations { get; set; }
+        public string? Id { get; set; }
 
         public override string ToString()
         {
-            return $"{building}, {city}, {street}";
+            return $"{Building}, {City}, {Street}";
         }
     }
 }

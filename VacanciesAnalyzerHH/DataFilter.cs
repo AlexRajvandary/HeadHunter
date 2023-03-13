@@ -144,24 +144,15 @@ namespace VacanciesAnalyzerHH
         {
             if (vacancy == null) return false;
 
-            return CheckField(vacancy.address?.ToString(), Adress)
-                && CheckField(vacancy.employer?.name, CompanyName)
-                && CheckField(vacancy.name, Name)
-                && CheckField(vacancy.schedule?.name, Schedule)
-                && (vacancy.salary != null ?
-                        SalaryFrom != null
-                            ? vacancy.salary.VisibleFrom >= SalaryFrom
-                            : true
-                        : SalaryFrom != null
-                            ? false
-                            : true)
-                && (vacancy.salary != null ?
-                        SalaryTo != null
-                            ? vacancy.salary.VisibleTo <= SalaryTo
-                            : true
-                        : SalaryFrom != null
-                            ? false
-                            : true);
+            return CheckField(vacancy.Address?.ToString(), Adress)
+                && CheckField(vacancy.Employer?.Name, CompanyName)
+                && CheckField(vacancy.Name, Name)
+                && CheckField(vacancy.Schedule?.Name, Schedule)
+                && (vacancy.Salary != null ?
+                        SalaryFrom == null || vacancy.Salary.VisibleFrom >= SalaryFrom
+                        : SalaryFrom == null) && (vacancy.Salary != null 
+                            ? SalaryTo == null || vacancy.Salary.VisibleTo <= SalaryTo
+                            : SalaryFrom == null);
         }
 
         public void OnProperyChanged([CallerMemberName] string propertyName = null)

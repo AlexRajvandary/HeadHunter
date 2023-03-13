@@ -6,7 +6,7 @@
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         xmlns:local="clr-namespace:VacanciesAnalyzerHH" d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
         xmlns:sys="clr-namespace:System;assembly=mscorlib"
-        xmlns:supSer="clr-namespace:VacanciesAnalyzerHH.Support_services"
+        xmlns:supSer="clr-namespace:VacanciesAnalyzerHH.SupportServices"
         xmlns:af="http://schemas.fontawesome.io/icons/"
         mc:Ignorable="d"
         Title="MainWindow" MinHeight="700" MinWidth="1200" Name="mainWindow"

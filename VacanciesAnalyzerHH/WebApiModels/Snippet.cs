@@ -2,7 +2,7 @@
 {
     public class Snippet
     {
-        public string requirement { get; set; }
-        public string responsibility { get; set; }
+        public string? Requirement { get; set; }
+        public string? Responsibility { get; set; }
     }
 }
