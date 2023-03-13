@@ -5,6 +5,9 @@
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
+
+            <SolidColorBrush x:Key="MainBlueColor" Color="#0460D9"/>
+
             <Style TargetType="TextBlock" x:Key="CommonTitle">
                 <Setter Property="FontSize" Value="15"/>
                 <Setter Property="FontFamily" Value="Callibri"/>
@@ -13,7 +16,8 @@
             </Style>
 
             <Style TargetType="TextBox" x:Key="CommonText">
-                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="FontSize" Value="14"/>
+                <Setter Property="FontWeight" Value="Light"/>
                 <Setter Property="FontFamily" Value="Callibri"/>
                 <Setter Property="VerticalAlignment" Value="Center"/>
             </Style>
@@ -113,10 +117,73 @@
             </Style>
 
             <Style TargetType="TabItem" x:Key="CommonTextTabItem">
-                <Setter Property="FontSize" Value="15"/>
+                <Setter Property="FontSize" Value="13"/>
                 <Setter Property="FontFamily" Value="Callibri"/>
                 <Setter Property="VerticalAlignment" Value="Bottom"/>
-                <Setter Property="Height" Value="24"/>
+                <Setter Property="Background" Value="White"/>
+                <Setter Property="Opacity" Value="0.5"/>
+                <Setter Property="BorderBrush" Value="Black"/>
+                <Setter Property="BorderThickness" Value="5"/>
+                <Setter Property="Margin" Value="0 0 5 0"/>
+                <Setter Property="Padding" Value="12 10 12 10"/>
+                <Setter Property="Height" Value="40"/>
+                <Setter Property="Width" Value="220"/>
+                <Style.Resources>
+                    <Style TargetType="Border">
+                        <Setter Property="CornerRadius" Value="7"/>
+                        <Setter Property="Effect">
+                            <Setter.Value>
+                                <DropShadowEffect ShadowDepth="0" Opacity="0.8"/>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Style.Resources>
+
+                <Style.Triggers>
+                    <Trigger Property="IsSelected" Value="True">
+                        <Setter Property="FontWeight" Value="SemiBold"/>
+                    </Trigger>
+                </Style.Triggers>
+            </Style>
+
+            <Style TargetType="TabControl" x:Key="TabControlStyle">
+                <Setter Property="Background" Value="Transparent"/>
+                <Setter Property="BorderBrush" Value="Transparent"/>
+                <Setter Property="BorderThickness" Value="0"/>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="TabControl">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="50"/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                
+                                <TabPanel Grid.Row="0" 
+                                          IsItemsHost="True"
+                                          Background="#0460D9"/>
+
+                                <Border Grid.Row="1"
+                                        CornerRadius="5"
+                                        BorderThickness="1"
+                                        BorderBrush="Black"
+                                        Background="Transparent">
+                                    <ContentPresenter ContentSource="SelectedContent"
+                                                      SnapsToDevicePixels="True"/>
+
+                                </Border>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
+
+            <Style TargetType="TabItem" x:Key="VacancyTabItem" BasedOn="{StaticResource CommonTextTabItem}">
+                <Style.Triggers>
+                    <DataTrigger Binding="{Binding SelectedVacancy}" Value="{x:Null}">
+                        <Setter Property="Visibility" Value="Collapsed"/>
+                    </DataTrigger>
+                </Style.Triggers>
             </Style>
 
             <Style x:Key="FooterBackgroundColor" TargetType="StackPanel">

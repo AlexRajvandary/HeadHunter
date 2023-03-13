@@ -30,7 +30,6 @@
         </Grid.RowDefinitions>
 
         <StackPanel Orientation="Vertical" Grid.Row="0" Style="{StaticResource FooterBackgroundColor}" Background="#FF7080CE">
-
             <StackPanel Orientation="Horizontal" Grid.Row="0" Margin="20,20,0,0">
                 <TextBlock Text="Поиск"  Style="{StaticResource CommonTitle}" Margin="0,0,10,0"/>
                 <TextBox Text="{Binding SearchEngine.TextQuary}" Height="25" Style="{StaticResource SearchTextBox}"/>
@@ -108,11 +107,10 @@
             </StackPanel>
         </StackPanel>
 
-        <TabControl Margin="10" Grid.Row="1" Height="700" Visibility="Visible">
-          
+        <TabControl Margin="10" Grid.Row="1" Height="700" Style="{StaticResource TabControlStyle}">
+
             <TabItem Header="Все вакансии" Style="{StaticResource CommonTextTabItem}">
-                
-                <DataGrid 
+                <DataGrid Background="Transparent"
                           ItemsSource="{Binding Source={StaticResource VacanciesCollectionViewSource}}" 
                           SelectedItem="{Binding SelectedVacancy}" 
                           Width="auto"
@@ -125,6 +123,7 @@
                           IsReadOnly="True"
                           HeadersVisibility="Column"
                           SelectionMode="Single"  
+                          FontWeight="Light"
                           >
                     <DataGrid.RowStyle>
                         <Style TargetType="DataGridRow">
@@ -149,9 +148,16 @@
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
-                        
-                        
                     </DataGrid.RowStyle>
+
+                    <DataGrid.Style>
+                        <Style TargetType="DataGrid">
+                            <Setter Property="BorderBrush" Value="Transparent"/>
+                            <Setter Property="BorderThickness" Value="0"/>
+                            <Setter Property="Background" Value="Transparent"/>
+                        </Style>
+                    </DataGrid.Style>
+                    
                     <DataGrid.Resources>
                         <Style TargetType="DataGridCell">
                             <Style.Triggers>
@@ -310,23 +316,22 @@
                 </DataGrid>
             </TabItem>
             
-            <TabItem Header="Анализ зарплат">
+            <TabItem Header="Анализ зарплат" Style="{StaticResource CommonTextTabItem}">
                 <Grid Style="{StaticResource ChartStyle}">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="15"/>
-                        <RowDefinition Height="15"/>
+                        <RowDefinition Height="20"/>
+                        <RowDefinition Height="20"/>
                         <RowDefinition/>
                     </Grid.RowDefinitions>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Height="14" Text="Минимальная зарплата:"/>
-                        <TextBlock Height="14" Text="{Binding SalaryVisualizer.Min}" Margin="5,0"/>
+                        <TextBlock Height="20" Text="Минимальная зарплата:" Margin="2"/>
+                        <TextBlock Height="20" Text="{Binding SalaryVisualizer.Min}" Margin="2,0" Style="{StaticResource CommonTitle}"/>
                     </StackPanel>
 
-                    <StackPanel Orientation="Horizontal" Grid.Row="1">
-                        <TextBlock Height="14" Text="Максимальная зарплата:"/>
-                        <TextBlock Height="14" Text="{Binding SalaryVisualizer.Max}" Margin="5,0"/>
+                    <StackPanel Orientation="Horizontal" Grid.Row="1" >
+                        <TextBlock Height="20" Text="Максимальная зарплата:"/>
+                        <TextBlock Height="20" Text="{Binding SalaryVisualizer.Max}" Margin="2"/>
                     </StackPanel>
-
 
                     <lvc:CartesianChart Series="{Binding SalaryVisualizer.SeriesCollection}" LegendLocation="Left" Zoom="None" Hoverable="False"  Grid.ColumnSpan="2" Grid.Row="2">
                         <lvc:CartesianChart.AxisX>
@@ -338,68 +343,43 @@
                     </lvc:CartesianChart>
                 </Grid>
             </TabItem>
-            <TabItem Header="Подробнее о вакансии">
-                <TabItem.Style>
-                    <Style TargetType="TabItem">
-                        <Style.Triggers>
-                            <DataTrigger Binding="{Binding SelectedVacancy}" Value="{x:Null}">
-                                <Setter Property="Visibility" Value="Collapsed"/>
-                            </DataTrigger>
-                        </Style.Triggers>
-                    </Style>
-                </TabItem.Style>
-
+            <TabItem Header="Подробнее о вакансии" Style="{StaticResource VacancyTabItem}">
+              
                 <StackPanel Orientation="Vertical" Width="{Binding ElementName=mainWindow, Path=ActualWidth}">
 
-                    <TextBlock Text="{Binding SelectedVacancy.name}" Margin="2,0,5,0" Padding="10,2"/>
-                    <TextBlock Text="{Binding SelectedVacancy.employer.name}" Margin="2,0,5,0" Padding="10,2"/>
+                    <TextBlock Text="{Binding SelectedVacancy.name}" Margin="2,0,5,0" Padding="10,2" Style="{StaticResource CommonTitle}"/>
+                    <TextBlock Text="{Binding SelectedVacancy.employer.name}" Margin="2,0,5,0" Padding="10,2" Style="{StaticResource CommonTitle}"/>
 
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding SelectedVacancy.salary.From}" Margin="2,0,5,0" Padding="10,2"/>
-                        <TextBlock Text="{Binding SelectedVacancy.salary.To}" Margin="2,0,5,0" Padding="10,2"/>
-                        <TextBlock Text="{Binding SelectedVacancy.salary.Currency}" Margin="2,0,5,0" Padding="10,2"/>
+                        <TextBlock Text="{Binding SelectedVacancy.salary.From}" Margin="2,0,5,0" Padding="10,2" Style="{StaticResource CommonTitle}"/>
+                        <TextBlock Text="{Binding SelectedVacancy.salary.To}" Margin="2,0,5,0" Padding="10,2" Style="{StaticResource CommonTitle}"/>
+                        <TextBlock Text="{Binding SelectedVacancy.salary.Currency}" Margin="2,0,5,0" Padding="10,2" Style="{StaticResource CommonTitle}"/>
                     </StackPanel>
 
                     <TextBlock Text="Требования:" Margin="2,0,5,0" Padding="10,2"/>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding SelectedVacancy.snippet.requirement}" Margin="2,0,5,0" Padding="10,2"/>
+                        <TextBlock Text="{Binding SelectedVacancy.snippet.requirement}" Margin="2,0,5,0" Padding="10,2" Style="{StaticResource CommonTitle}"/>
                     </StackPanel>
-                    <TextBlock Text="Обязанности:" Margin="2,0,5,0" Padding="10,2"/>
+                    <TextBlock Text="Обязанности:" Style="{StaticResource CommonTitle}"/>
                     <StackPanel Orientation="Horizontal">
-                        <TextBlock Text="{Binding SelectedVacancy.snippet.responsibility}" Margin="2,0,5,0" Padding="10,2"/>
+                        <TextBlock Text="{Binding SelectedVacancy.snippet.responsibility}" Style="{StaticResource CommonTitle}"/>
                     </StackPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Анализ навыков и требований" Height="26" Margin="-2,-2,-2,0" VerticalAlignment="Top">
+            <TabItem Header="Анализ навыков и требований" Style="{StaticResource CommonTextTabItem}">
                 <ListView ItemsSource="{Binding SkillsAnalyzer.Skills}">
                     <ListView.ItemTemplate>
                         <DataTemplate>
                             <StackPanel Orientation="Horizontal">
-                                <TextBlock Text="{Binding Value}"/>
-                                <TextBlock Text="{Binding Occurances}"/>
+                                <TextBlock Text="{Binding Value}" Style="{StaticResource CommonTitle}"/>
+                                <TextBlock Text="{Binding Occurances}" Style="{StaticResource CommonTitle}"/>
                             </StackPanel>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>
             </TabItem>
         </TabControl>
-        
-        <StackPanel Orientation="Vertical" Grid.Row="1" Visibility="Collapsed">
-            <StackPanel Orientation="Horizontal">
-                <Button Content="Все вакансии" Style="{StaticResource CustomTabControlButton}"/>
-                <Button Content="График зарплат" Style="{StaticResource CustomTabControlButton}"/>
-                <Button Content="Анализ требований" Style="{StaticResource CustomTabControlButton}"/>
-            </StackPanel>
-            <Button Style="{StaticResource TableButton}"/>
-            <Button Style="{StaticResource TableButton}"/>
-            <Button Style="{StaticResource TableButton}"/>
-            <Button Style="{StaticResource TableButton}"/>
-            <Button Style="{StaticResource TableButton}"/>
-            <Button Style="{StaticResource TableButton}"/>
-            <Button Style="{StaticResource TableButton}"/>
-            <Button Style="{StaticResource TableButton}"/>
-        </StackPanel>
-        
+       
         <StackPanel Orientation="Horizontal" Grid.Row="2" Height="30">
             <StackPanel Orientation="Horizontal" Margin="20,0,0,0"  Visibility="{Binding SearchEngine.IsSearchInProcess, Converter={StaticResource boolToVis}}">
                 <TextBlock Text="Загрузка" Style="{StaticResource CommonTitle}"/>
