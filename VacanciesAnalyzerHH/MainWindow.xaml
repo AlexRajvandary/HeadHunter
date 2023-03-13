@@ -107,7 +107,7 @@
             </StackPanel>
         </StackPanel>
 
-        <TabControl Margin="10" Grid.Row="1" Height="700" Style="{StaticResource TabControlStyle}">
+        <TabControl Margin="10" Grid.Row="1" Height="670" Style="{StaticResource TabControlStyle}">
 
             <TabItem Header="Все вакансии" Style="{StaticResource CommonTextTabItem}">
                 <DataGrid Background="Transparent"
@@ -125,26 +125,35 @@
                           SelectionMode="Single"  
                           FontWeight="Light"
                           >
-                    <DataGrid.RowStyle>
-                        <Style TargetType="DataGridRow">
-                            <Setter Property="Margin" Value="0,0,5,5"/>
-                            <Setter Property="Opacity" Value="0.8"/>
+
+                    <DataGrid.ColumnHeaderStyle>
+                        <Style TargetType="DataGridColumnHeader">
+                            <Setter Property="Margin" Value="4"/>
                             <Style.Resources>
                                 <Style TargetType="Border">
                                     <Setter Property="CornerRadius" Value="15"/>
-                                    <Setter Property="Effect">
-                                        <Setter.Value>
-                                            <DropShadowEffect ShadowDepth="0" Opacity="0.8"/>
-                                        </Setter.Value>
-                                    </Setter>
+                                </Style>
+                            </Style.Resources>
+                        </Style>
+                    </DataGrid.ColumnHeaderStyle>
+
+                    <DataGrid.RowStyle>
+                        <Style TargetType="DataGridRow">
+                            <Setter Property="Margin" Value="5"/>
+                          
+                            <Style.Resources>
+                                <Style TargetType="Border">
+                                    <Setter Property="CornerRadius" Value="15"/>
                                 </Style>
                             </Style.Resources>
                             <Style.Triggers>
                                 <Trigger Property="IsSelected"
                                          Value="True">
-                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
                                     <Setter Property="Background" Value="White"/>
                                     <Setter Property="Opacity" Value="1"/>
+                                    <Setter Property="BorderBrush" Value="Black"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
@@ -170,9 +179,8 @@
                             </Style.Triggers>
                         </Style>
                     </DataGrid.Resources>
-                   
+
                     <DataGrid.Columns>
-                        
                         <DataGridTemplateColumn Width="150">
                             <DataGridTemplateColumn.HeaderTemplate>
                                 <DataTemplate>
@@ -316,7 +324,10 @@
                 </DataGrid>
             </TabItem>
             
-            <TabItem Header="Анализ зарплат" Style="{StaticResource CommonTextTabItem}">
+            <TabItem Style="{StaticResource CommonTextTabItem}">
+                <TabItem.Header>
+                    <TextBlock Text="Анализ зарплат" Foreground="Black"/>
+                </TabItem.Header>
                 <Grid Style="{StaticResource ChartStyle}">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="20"/>
@@ -380,27 +391,32 @@
             </TabItem>
         </TabControl>
        
-        <StackPanel Orientation="Horizontal" Grid.Row="2" Height="30">
+        <StackPanel Orientation="Horizontal" Grid.Row="2" Height="25">
             <StackPanel Orientation="Horizontal" Margin="20,0,0,0"  Visibility="{Binding SearchEngine.IsSearchInProcess, Converter={StaticResource boolToVis}}">
-                <TextBlock Text="Загрузка" Style="{StaticResource CommonTitle}"/>
                 <ProgressBar 
                     IsIndeterminate="True"
                     Foreground="Green" 
                     Background="LightGreen"
-                    Width="100" 
+                    Width="120" 
                     Height="20"
-                    Margin="5"/>
+                    Margin="2"
+                    BorderBrush="Black"
+                    BorderThickness="1"
+                    >
+                  
+                </ProgressBar>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal"  Margin="20,0,0,0" Visibility="{Binding SkillsAnalyzer.IsActive, Converter={StaticResource boolToVis}}">
-                <TextBlock Text="Анализ строк" Style="{StaticResource CommonTitle}"/>
                 <ProgressBar 
                     IsIndeterminate="True"
-                    Background="Blue"
-                    Foreground="CadetBlue" 
-                    Width="100" 
+                    Background="#7F0000FF"
+                    Foreground="Blue" 
+                    Width="120" 
                     Height="20"
-                    Margin="5"/>
+                    Margin="2"
+                    BorderBrush="Black"
+                    BorderThickness="1"/>
             </StackPanel>
 
             <StackPanel Orientation="Horizontal"  Margin="20,0,0,0" Visibility="{Binding SearchEngine.IsSearchCompleted, Converter={StaticResource boolToVis}}">
