@@ -40,7 +40,7 @@
                 </Button>
 
                 <ToggleButton x:Name="TogglePopupButton" Width="25" Height="25" HorizontalAlignment="Left" Background="Transparent" BorderBrush="Transparent">
-                    <StackPanel>
+                    <StackPanel Background="Transparent">
                         <ContentControl>
                             <ContentControl.Content>
                                 <af:FontAwesome Icon="Filter" FontSize="18"/>
@@ -49,7 +49,7 @@
 
                         <Popup Name="filterPopUp" IsOpen="{Binding IsChecked, ElementName=TogglePopupButton}">
                             <Border BorderThickness="1">
-                                <GroupBox Header="Фильтр" Margin="5" Background="AliceBlue">
+                                <GroupBox Header="Фильтр" Margin="5" Background="White">
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition/>
