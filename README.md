@@ -1,6 +1,7 @@
 # HeadHunter
 ## Desktop job aggregator
 * Search job
+* * Searching jobs from different web sources
 * * Filtering 
 * * Sorting
 * * Currency converter
